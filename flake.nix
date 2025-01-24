@@ -5,10 +5,13 @@
     # Specify the source of Home Manager and Nixpkgs.
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixvim = {
-      url = "github:nix-community/nixvim";
+      url = "github:Jon-S-Wick/nixvim";
+
+      # url = "github:nix-community/nixvim";
       # url = "/home/gaetan/perso/nix/nixvim/nixvim";
-      inputs.nixpkgs.follows = "nixpkgs";
+      # inputs.nixpkgs.follows = "nixpkgs";
     };
+    ghostty = { url = "github:ghostty-org/ghostty"; };
     hyprpanel.url = "github:Jas-SinghFSU/HyprPanel";
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -34,16 +37,16 @@
 
         # Specify your home configuration modules here, for example,
         # the path to your home.nix.
-        modules = [ 
+        modules = [
 
-            {
-              nixpkgs.overlays =
-                [ inputs.hyprpanel.overlay ];#inputs.nur.overlay ];
-              _module.args = { inherit inputs; };
-            }
-        ./home.nix
-            inputs.stylix.homeManagerModules.stylix
-            inputs.nixvim.homeManagerModules.nixvim
+          {
+            nixpkgs.overlays =
+              [ inputs.hyprpanel.overlay ]; # inputs.nur.overlay ];
+            _module.args = { inherit inputs; };
+          }
+          ./home.nix
+          inputs.stylix.homeManagerModules.stylix
+          inputs.nixvim.homeManagerModules.nixvim
         ];
 
         # Optionally use extraSpecialArgs

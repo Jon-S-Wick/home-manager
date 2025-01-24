@@ -50,6 +50,9 @@
     pkgs.zoom-us
     pkgs.imagej
     pkgs.jdt-language-server
+    pkgs.neofetch
+    # pkgs.ghostty
+
     # pkgs.cider-2
     # pkgs.appimageTools
     # pkgs.fetchurl
@@ -67,25 +70,25 @@
     #   echo "Hello, ${config.home.username}!"
     # '')
   ];
-  programs.neovim = {
-    enable = true;
-    extraPackages = with pkgs; [
-      vimPlugins.mini-base16
-      # Formatters
-      gofumpt
-      goimports-reviser
-      golines
-
-      # LSP
-      gopls
-      jdt-language-server
-      pyright
-
-      # Tools
-      go
-      gcc
-    ];
-  };
+  # programs.neovim = {
+  #   enable = true;
+  #   extraPackages = with pkgs; [
+  #     vimPlugins.mini-base16
+  #     # Formatters
+  #     gofumpt
+  #     goimports-reviser
+  #     golines
+  #
+  #     # LSP
+  #     gopls
+  #     jdt-language-server
+  #     pyright
+  #
+  #     # Tools
+  #     go
+  #     gcc
+  #   ];
+  # };
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.

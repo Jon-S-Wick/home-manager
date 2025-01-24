@@ -17,7 +17,7 @@ in {
     ./hypridle.nix
     ./hyprpaper.nix
     ./waybar.nix
-    # ./hoyprlock.nix
+    ./hoyprlock.nix
     # ./hyprpanel.nix
   ];
 
