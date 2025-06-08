@@ -63,6 +63,8 @@
           inputs.spicetify-nix.homeManagerModules.default
 
         ];
+                    username = "jonwick";
+                        homeDirectory = "/home/jonwick";
 
         # Optionally use extraSpecialArgs
         # to pass through arguments to home.nix
