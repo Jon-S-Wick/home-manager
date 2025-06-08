@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{  pkgs, ... }:
 
 {
   services.dunst = {
@@ -11,11 +11,11 @@
       global = {
         rounded = "yes";
         origin = "top-right";
-        monitor = "0";
+        # monitor = "3";
         alignment = "left";
         vertical_alignment = "center";
-        width = "400";
-        height = "400";
+        width = "200";
+        height = "200";
         scale = 0;
         gap_size = 0;
         progress_bar = true;
@@ -61,16 +61,16 @@
       fullscreen_delay_everything = { fullscreen = "delay"; };
 
       urgency_critical = {
-        background = "#d64e4e";
-        foreground = "#f0e0e0";
+        # background = "#d64e4e";
+        # foreground = "#f0e0e0";
       };
       urgency_low = {
-        background = "#232323";
-        foreground = "#2596be";
+        # background = "#232323";
+        # foreground = "#2596be";
       };
       urgency_normal = {
-        background = "#1e1e2a";
-        foreground = "#2596be";
+        # background = "#1e1e2a";
+        # foreground = "#2596be";
       };
     };
   };

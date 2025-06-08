@@ -9,7 +9,8 @@ let
   rounding = config.var.theme.rounding;
   blur = config.var.theme.blur;
   keyboardLayout = config.var.keyboardLayout;
-in {
+in
+{
   imports = [
     ./animations.nix
     ./bindings.nix
@@ -45,9 +46,18 @@ in {
   ];
 
   wayland.windowManager.hyprland = {
-    enable = true;
-    xwayland.enable = true;
-    systemd.enable = true;
+    # enable = true;
+    # xwayland.enable = true;
+    # systemd.enable = true;
+    #
+    # extraConfig = ''
+    #         windowrule = opacity 0.0 override, class:^(xwaylandvideobridge)$
+    #   windowrule = noanim, class:^(xwaylandvideobridge)$
+    #   windowrule = noinitialfocus, class:^(xwaylandvideobridge)$
+    #   windowrule = maxsize 1 1, class:^(xwaylandvideobridge)$
+    #   windowrule = noblur, class:^(xwaylandvideobridge)$
+    #   windowrule = nofocus, class:^(xwaylandvideobridge)$
+    # '';
 
     settings = {
 
@@ -58,6 +68,7 @@ in {
       monitor = [
         "eDP-2,2560x1600@165.0,0x1080,1.3333333"
         "HDMI-A-1,1920x1080@60.0,0x0,1.0"
+        # "HDMI-A-1,1920x1080@60.0,0x0, 1.0, mirror, eDP-2"
         "DP-3,1920x1080@60.0,1925x0,1.0 " # , transform, 3"
         ",prefered,auto,1"
       ];
@@ -85,7 +96,9 @@ in {
           range = 20;
           render_power = 3;
         };
-        blur = { enabled = if blur then "true" else "false"; };
+        blur = {
+          enabled = if blur then "true" else "false";
+        };
       };
 
       master = {
@@ -94,7 +107,9 @@ in {
         mfact = 0.5;
       };
 
-      gestures = { workspace_swipe = true; };
+      gestures = {
+        workspace_swipe = true;
+      };
 
       misc = {
         vfr = true;

@@ -5,7 +5,7 @@
   gaps-out = 4 * 2;
   active-opacity = 1;
   inactive-opacity = 0.87;
-  blur = true;
+  blur = false;
   border-size = 2;
   animation-speed = "slow"; # "fast" | "medium" | "slow"
   # fetch = "nerdfetch"; # "nerdfetch" | "neofetch" | "pfetch" | "none"
@@ -16,4 +16,4 @@
     transparentButtons = false;
     floating = true;
   };
-  }
+}

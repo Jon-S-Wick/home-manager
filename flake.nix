@@ -3,7 +3,8 @@
 
   inputs = {
     # Specify the source of Home Manager and Nixpkgs.
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    # nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "nixpkgs/release-24.11";
     nixvim = {
       url = "github:Jon-S-Wick/nixvim";
 
@@ -11,13 +12,16 @@
       # url = "/home/gaetan/perso/nix/nixvim/nixvim";
       # inputs.nixpkgs.follows = "nixpkgs";
     };
-    ghostty = { url = "github:ghostty-org/ghostty"; };
-    hyprpanel.url = "github:Jas-SinghFSU/HyprPanel";
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
+    ghostty = {
+      url = "github:ghostty-org/ghostty";
     };
-
+    hyprpanel.url = "github:Jas-SinghFSU/HyprPanel";
+    # home-manager = {
+    #   url = "github:nix-community/home-manager";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
+    home-manager.url = "github:nix-community/home-manager/release-24.11";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
     apple-fonts.url = "github:Lyndeno/apple-fonts.nix";
 
     nixy-wallpapers = {
@@ -25,13 +29,24 @@
       flake = false;
     };
     stylix.url = "github:danth/stylix";
+    spicetify-nix = {
+      url = "github:Gerg-L/spicetify-nix";
+    };
   };
 
-  outputs = inputs@{ nixpkgs, home-manager, ... }:
+  outputs =
+    {
+      nixpkgs,
+      ghostty,
+      spicetify-nix,
+      home-manager,
+      ...
+    }@inputs:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
-    in {
+    in
+    {
       homeConfigurations."jonwick" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
 
@@ -40,13 +55,13 @@
         modules = [
 
           {
-            nixpkgs.overlays =
-              [ inputs.hyprpanel.overlay ]; # inputs.nur.overlay ];
+            nixpkgs.overlays = [ inputs.hyprpanel.overlay ]; # inputs.nur.overlay ];
             _module.args = { inherit inputs; };
           }
           ./home.nix
           inputs.stylix.homeManagerModules.stylix
-          inputs.nixvim.homeManagerModules.nixvim
+          inputs.spicetify-nix.homeManagerModules.default
+
         ];
 
         # Optionally use extraSpecialArgs

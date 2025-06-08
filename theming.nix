@@ -1,4 +1,5 @@
-{ pkgs, inputs, ... }: {
+{ pkgs, inputs, ... }:
+{
   stylix = {
     enable = true;
 
@@ -29,8 +30,7 @@
     #     "f2cdcd"; # Deprecated, Opening/Closing Embedded Language Tags, e.g. <?php ?>
     # };
     # base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-hard.yaml";
-    base16Scheme =
-      "${pkgs.base16-schemes}/share/themes/everforest-dark-hard.yaml";
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/atelier-estuary.yaml";
 
     cursor = {
       package = pkgs.bibata-cursors;
@@ -40,7 +40,7 @@
 
     fonts = {
       monospace = {
-        package = pkgs.nerd-fonts.jetbrains-mono;
+        package = pkgs.jetbrains-mono;
         name = "JetBrains Mono Nerd Font";
       };
       sansSerif = {
@@ -69,7 +69,8 @@
     # };
     # targets.nixvim.plugin = "base16-nvim";
     #   polarity = "dark";
-    image = inputs.nixy-wallpapers + "/wallpapers/f.png";
+    # image = inputs.nixy-wallpapers + "/wallpapers/f.png";
+    image = ./Wallpaper_Claude-lorraine-apollo.jpeg;
     # targets.kitty.enable = true;
   };
 

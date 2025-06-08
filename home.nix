@@ -1,4 +1,9 @@
-{ inputs, config, pkgs, ... }:
+{
+  inputs,
+  config,
+  pkgs,
+  ...
+}:
 
 {
 
@@ -13,9 +18,14 @@
     ./programs/wofi/default.nix
     ./scripts/default.nix
     # ./programs/nvim/default.nix
-    # ./programs/dunst/default.nix
+    ./programs/dunst/default.nix
     # ./programs/wofi/cider.nix
     # ./programs/waybar/default.nix
+    ./scripts/default.nix
+    ./programs/clipman.nix
+
+    # ./programs/spicetify.nix
+    # inputs.spicetify-nix.homeManagerModules.default
 
   ];
   # Home Manager needs a bit of information about you and the paths it should
@@ -41,16 +51,29 @@
   # The home.packages option allows you to install Nix packages into your
   # environment.
   home.packages = [
-    # # Adds the 'hello' command to your environment. It prints a friendly
-    # # "Hello, world!" when run.
+    # Adds the 'hello' command to your environment. It prints a friendly
+    # "Hello, world!" when run.
     # pkgs.hello
+    pkgs.vscode
     pkgs.geary
+    pkgs.iwgtk
     pkgs.samtools
     pkgs.rstudio
+    pkgs.zotero
     pkgs.zoom-us
-    pkgs.imagej
+    # pkgs.imagej
+    pkgs.fiji
     pkgs.jdt-language-server
     pkgs.neofetch
+    inputs.ghostty.packages.x86_64-linux.default
+    pkgs.cliphist
+    pkgs.swappy
+    pkgs.slurp
+    pkgs.grimblast
+    # pkgs.spicetify-cli
+    pkgs.texliveFull
+    # pkgs.spotify
+
     # pkgs.ghostty
 
     # pkgs.cider-2
@@ -121,7 +144,9 @@
   #
   #  /etc/profiles/per-user/jonwick/etc/profile.d/hm-session-vars.sh
   #
-  home.sessionVariables = { EDITOR = "nvim"; };
+  home.sessionVariables = {
+    EDITOR = "nvim";
+  };
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;

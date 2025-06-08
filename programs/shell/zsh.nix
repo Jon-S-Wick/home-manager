@@ -8,19 +8,20 @@
   home.sessionPath = [ "$HOME/go/bin" ];
 
   programs.zsh = {
+
     initExtraFirst = ''
-      __conda_setup="$('/home/jonwick/conda/bin/conda' 'shell.zsh' 'hook' 2>/dev/null)"
-          if [ $? -eq 0 ]; then
-              eval "$__conda_setup"
-          else
-              if [ -f "/home/jonwick/conda/etc/profile.d/conda.sh" ]; then
-                  . "/home/jonwick/conda/etc/profile.d/conda.sh"
-              else
-                  export PATH="/home/jonwick/conda/bin:$PATH"
-              fi
-          fi
-          unset __conda_setup
-          # <<< conda initialize <<<
+export MAMBA_EXE='/nix/store/mw141k4ssdzcpkzxrfl6889arh7jmrva-micromamba-1.5.8/bin/micromamba';
+export MAMBA_ROOT_PREFIX='/home/jonwick/.local/share/micromamba';
+__mamba_setup="$("$MAMBA_EXE" shell hook --shell zsh --root-prefix "$MAMBA_ROOT_PREFIX" 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__mamba_setup"
+else
+    alias micromamba="$MAMBA_EXE"  # Fallback on help from mamba activate
+fi
+unset __mamba_setup
+# <<< mamba initialize <<<
+	eval $(thefuck --alias)
+
     '';
 
     enable = true;
@@ -66,11 +67,12 @@
     '';
 
     shellAliases = {
-      hm = "nvim ~/.config/home-manager/";
-      bioinfo = "ssh wickj2@140.160.231.67 -p 59";
+      hm = "nvim ~/.config/home-manager";
+      bioinfo = "sudo ssh wickj2@140.160.231.67 -p 59";
       clipLast = ''wl-copy "!!" '';
       clip = "wl-copy";
       sd = "cd ~ && cd $(find * -type d | fzf)";
+      nvim = "~/.config/nixvim/result/bin/nvim";
       vim = "nvim";
       vi = "nvim";
       v = "nvim .";
@@ -79,6 +81,8 @@
       celar = "clear";
       e = "exit";
       cd = "z";
+	b = "cd -";
+	
       ls = "eza --icons=always --no-quotes";
       tree = "eza --icons=always --tree --no-quotes";
       sl = "ls";
@@ -89,7 +93,7 @@
       wireguard-import = "nmcli connection import type wireguard file";
 
       notes =
-        "nvim ~/nextcloud/Notes/index.md --cmd 'cd ~/nextcloud/Notes' -c ':Telescope find_files'";
+        "nvim ~/Documents/Notes/Academic-Notes";
       note = "notes";
 
       # git

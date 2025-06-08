@@ -76,6 +76,8 @@ let
           "󰖔 Night-shift"
           " Nixy"
           "󰈊 Hyprpicker"
+          "📋 Clipboard"
+          
         )
 
         selected=$(printf '%s\n' "''${options[@]}" | wofi -p " Quickmenu" --dmenu)
@@ -94,6 +96,9 @@ let
             ;;
           "Hyprpicker")
             sleep 0.2 && ${pkgs.hyprpicker}/bin/hyprpicker -a
+            ;;
+          "Clipboard")
+              sleep 0.2 && clipboard
             ;;
         esac
       fi
