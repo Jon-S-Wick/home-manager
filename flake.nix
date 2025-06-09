@@ -4,7 +4,7 @@
   inputs = {
     # Specify the source of Home Manager and Nixpkgs.
     # nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs.url = "nixpkgs/release-24.11";
+    nixpkgs.url = "nixpkgs/release-25.05";
     nixvim = {
       url = "github:Jon-S-Wick/nixvim";
 
@@ -20,7 +20,7 @@
     #   url = "github:nix-community/home-manager";
     #   inputs.nixpkgs.follows = "nixpkgs";
     # };
-    home-manager.url = "github:nix-community/home-manager/release-24.11";
+    home-manager.url = "github:nix-community/home-manager/release-25.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     apple-fonts.url = "github:Lyndeno/apple-fonts.nix";
 
@@ -60,7 +60,7 @@
           }
           ./home.nix
           inputs.stylix.homeManagerModules.stylix
-          inputs.spicetify-nix.homeManagerModules.default
+          # inputs.spicetify-nix.homeManagerModules.default
 
         ];
 

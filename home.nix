@@ -31,6 +31,8 @@
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
 
+  stylix.targets.mako.enable = false;
+
   home.username = "jonwick";
   home.homeDirectory = "/home/jonwick";
   services.network-manager-applet.enable = true;
