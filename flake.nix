@@ -49,6 +49,10 @@
     {
             homeManagerModules.home = import ./home.nix {inherit inputs; inherit pkgs; modules = [
 
+          {
+            nixpkgs.overlays = [ inputs.hyprpanel.overlay ]; # inputs.nur.overlay ];
+            _module.args = { inherit inputs; };
+          }
           inputs.stylix.homeManagerModules.stylix
           inputs.spicetify-nix.homeManagerModules.default
             ];};
