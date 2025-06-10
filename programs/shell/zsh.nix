@@ -9,7 +9,7 @@
 
   programs.zsh = {
 
-    initExtraFirst = ''
+    initContent = lib.mkBefore ''
 export MAMBA_EXE='/nix/store/mw141k4ssdzcpkzxrfl6889arh7jmrva-micromamba-1.5.8/bin/micromamba';
 export MAMBA_ROOT_PREFIX='/home/jonwick/.local/share/micromamba';
 __mamba_setup="$("$MAMBA_EXE" shell hook --shell zsh --root-prefix "$MAMBA_ROOT_PREFIX" 2> /dev/null)"

@@ -60,7 +60,7 @@
           }
           ./home.nix
           inputs.stylix.homeManagerModules.stylix
-          # inputs.spicetify-nix.homeManagerModules.default
+          inputs.spicetify-nix.homeManagerModules.default
 
         ];
 
