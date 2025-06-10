@@ -47,7 +47,7 @@
       pkgs = nixpkgs.legacyPackages.${system};
     in
     {
-            homeManagerModules.home = import ./home.nix;
+            homeManagerModules.home = import ./home.nix inputs.stylix.homeManagerModules.stylix inputs.spicetify-nix.homeManagerModules.default;
       homeConfigurations."jonwick" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
 
