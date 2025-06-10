@@ -47,6 +47,7 @@
       pkgs = nixpkgs.legacyPackages.${system};
     in
     {
+            homeManagerModules.home = import ./home;
       homeConfigurations."jonwick" = home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
 
