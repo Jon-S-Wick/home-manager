@@ -70,12 +70,12 @@
         modules = [
 
           {
-            nixpkgs.overlays = [ inputs.hyprpanel.overlay ]; # inputs.nur.overlay ];
+            # nixpkgs.overlays = [ inputs.hyprpanel.overlay ]; # inputs.nur.overlay ];
             _module.args = { inherit inputs; };
           }
           ./home.nix
-          inputs.stylix.homeManagerModules.stylix
-          inputs.spicetify-nix.homeManagerModules.default
+          # inputs.stylix.homeManagerModules.stylix
+          # inputs.spicetify-nix.homeManagerModules.default
 
         ];
 
