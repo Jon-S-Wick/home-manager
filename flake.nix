@@ -42,28 +42,28 @@
       home-manager,
       ...
     }@inputs:
-    let
-      system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
-    in
+    # let
+    #   system = "x86_64-linux";
+    #   pkgs = nixpkgs.legacyPackages.${system};
+    # in
     {
-            homeManagerModules.home = home-manager.lib.homeManagerConfiguration  {
-                inherit pkgs;
-                modules = [
-
-          {
-            nixpkgs.overlays = [ inputs.hyprpanel.overlay ]; # inputs.nur.overlay ];
-            _module.args = { inherit inputs; };
-                    inherit inputs;
-          }
-          inputs.stylix.homeManagerModules.stylix
-          inputs.spicetify-nix.homeManagerModules.default
-            ]; 
-                extraSpecialArgs  = {inherit inputs; inherit pkgs;};
-            };
+          #   homeManagerModules.home = home-manager.lib.homeManagerConfiguration  {
+          #       inherit pkgs;
+          #       modules = [
+          #
+          # {
+          #   nixpkgs.overlays = [ inputs.hyprpanel.overlay ]; # inputs.nur.overlay ];
+          #   _module.args = { inherit inputs; };
+          #           inherit inputs;
+          # }
+          # inputs.stylix.homeManagerModules.stylix
+          # inputs.spicetify-nix.homeManagerModules.default
+          #   ]; 
+          #       extraSpecialArgs  = {inherit inputs; inherit pkgs;};
+          #   };
             homeConfigurations."jonwick" = home-manager.lib.homeManagerConfiguration {
                 extraSpecialArgs = {inherit inputs; };
-        inherit pkgs;
+        # inherit pkgs;
 
         # Specify your home configuration modules here, for example,
         # the path to your home.nix.
