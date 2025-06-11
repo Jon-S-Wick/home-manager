@@ -47,7 +47,8 @@
       pkgs = nixpkgs.legacyPackages.${system};
     in
     {
-            homeManagerModules.home = import ./home.nix {inherit inputs; inherit pkgs; modules = [
+            homeManagerModules.home = home-manager.lib.homeManagerConfiguration  {
+                modules = [
 
           {
             nixpkgs.overlays = [ inputs.hyprpanel.overlay ]; # inputs.nur.overlay ];
@@ -56,8 +57,11 @@
           }
           inputs.stylix.homeManagerModules.stylix
           inputs.spicetify-nix.homeManagerModules.default
-            ];};
+            ]; 
+                extraSpecialArgs  = {inherit inputs;};
+            };
             homeConfigurations."jonwick" = home-manager.lib.homeManagerConfiguration {
+                extraSpecialArgs = {inherit inputs; };
         inherit pkgs;
 
         # Specify your home configuration modules here, for example,
