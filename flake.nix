@@ -62,17 +62,17 @@
           #       extraSpecialArgs  = {inherit inputs; inherit pkgs;};
           #   };
             homeConfigurations."jonwick" = home-manager.lib.homeManagerConfiguration {
-                extraSpecialArgs = {inherit inputs; };
+                # extraSpecialArgs = {inherit inputs; };
         inherit pkgs;
 
         # Specify your home configuration modules here, for example,
         # the path to your home.nix.
         modules = [
 
-          {
-            # nixpkgs.overlays = [ inputs.hyprpanel.overlay ]; # inputs.nur.overlay ];
-            _module.args = { inherit inputs; };
-          }
+          # {
+          #   # nixpkgs.overlays = [ inputs.hyprpanel.overlay ]; # inputs.nur.overlay ];
+          #   _module.args = { inherit inputs; };
+          # }
           ./home.nix
           # inputs.stylix.homeManagerModules.stylix
           # inputs.spicetify-nix.homeManagerModules.default
