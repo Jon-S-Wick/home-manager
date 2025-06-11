@@ -48,6 +48,7 @@
     in
     {
             homeManagerModules.home = home-manager.lib.homeManagerConfiguration  {
+                inherit pkgs;
                 modules = [
 
           {
