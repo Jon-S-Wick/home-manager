@@ -39,7 +39,7 @@
       nixpkgs,
       # ghostty,
       # spicetify-nix,
-      # home-manager,
+      home-manager,
       ...
     }@inputs:
     let
