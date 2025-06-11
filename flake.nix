@@ -36,10 +36,10 @@
 
   outputs =
     {
-      nixpkgs,
-      ghostty,
-      spicetify-nix,
-      home-manager,
+      # nixpkgs,
+      # ghostty,
+      # spicetify-nix,
+      # home-manager,
       ...
     }@inputs:
     let
