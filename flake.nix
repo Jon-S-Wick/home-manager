@@ -58,7 +58,7 @@
           inputs.stylix.homeManagerModules.stylix
           inputs.spicetify-nix.homeManagerModules.default
             ]; 
-                extraSpecialArgs  = {inherit inputs;};
+                extraSpecialArgs  = {inherit inputs; inherit pkgs;};
             };
             homeConfigurations."jonwick" = home-manager.lib.homeManagerConfiguration {
                 extraSpecialArgs = {inherit inputs; };
