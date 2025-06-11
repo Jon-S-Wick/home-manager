@@ -36,7 +36,7 @@
 
   outputs =
     {
-      # nixpkgs,
+      nixpkgs,
       # ghostty,
       # spicetify-nix,
       # home-manager,
