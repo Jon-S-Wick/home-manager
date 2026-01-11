@@ -18,6 +18,7 @@ in
     ./hypridle.nix
     ./hyprpaper.nix
     ./waybar.nix
+      # ./../waybar/default.nix
     ./hoyprlock.nix
     # ./hyprpanel.nix
   ];
@@ -47,7 +48,7 @@ in
 
   wayland.windowManager.hyprland = {
     enable = true;
-    # xwayland.enable = true;
+    xwayland.enable = true;
     # systemd.enable = true;
     #
     # extraConfig = ''
@@ -66,9 +67,11 @@ in
       "$ctrlMod" = "SUPER_CTRL";
 
       monitor = [
-        "eDP-2,2560x1600@165.0,0x1080,1.3333333"
+        "eDP-1,2560x1600@165.0,0x1080,1.3333333"
         "HDMI-A-1,1920x1080@60.0,0x0,1.0"
         # "HDMI-A-1,1920x1080@60.0,0x0, 1.0, mirror, eDP-2"
+        "DP-1,1920x1080@60.0,1925x0,1.0 " # , transform, 3"
+        "DP-2,1920x1080@60.0,1925x0,1.0 " # , transform, 3"
         "DP-3,1920x1080@60.0,1925x0,1.0 " # , transform, 3"
         ",prefered,auto,1"
       ];
@@ -83,7 +86,7 @@ in
         gaps_in = gaps-in;
         gaps_out = gaps-out;
         border_size = border-size;
-        border_part_of_window = true;
+        # border_part_of_window = true;
         layout = "master";
       };
 

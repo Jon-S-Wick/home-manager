@@ -14,6 +14,8 @@ let
     background-color = "rgba(39, 39, 39, ${opacity})";
     background = "#${config.lib.stylix.colors.base00}";
     foreground = "#${config.lib.stylix.colors.base05}";
+     background-alt = "#${config.lib.stylix.colors.base01}";
+     accent = "#${config.lib.stylix.colors.base0D}";
     dark = "#434343";
     red = "#c94f6d";
     yellow = "#dbc074";
@@ -46,7 +48,7 @@ in
       ];
       modules-right = [
         "tray"
-        # "temperature"
+        "temperature"
         # "cpu"
         "battery"
         # "memory"
@@ -82,6 +84,13 @@ in
           ""
         ];
       };
+      temperature = {
+            critical = 80;
+            format = "{temperatureC}°C {icon}";
+            format-icons = ["" "" ""];
+            
+
+         };
       memory = {
         format = "󰍛 {}%";
         format-alt = "󰍛 {used}/{total} GiB";
@@ -142,39 +151,39 @@ in
       }.modules-right {
         margin: 2px 10px 0 0;
          border-radius: 15px;
-        background-color: ${palette.background-color};
+        background-color: ${palette.background};
       }.modules-center {
 
         margin: 2px 10px 0 0;
          border-radius: 15px;
-        background-color: ${palette.background-color};
+        background-color: ${palette.background};
       }
       /*
       window > box {
          margin-left: 5px;
          margin-right: 5px;
          margin-top: 5px;
-         background-color: ${palette.background-color};
-         border: 2px none ${palette.blue};
+         background-color: ${palette.background};
+         border: 2px none ${palette.background};
       } */
 
       #workspaces {
-         background: ${palette.foreground};
+         background: ${palette.background};
          color: ${palette.background};
          margin: 3px 3px;
          padding: 3px 2px;
          border-radius: 15px;
       }
       #workspaces button {
-         background: ${palette.foreground};
-         color: ${palette.background};
+         background: ${palette.background};
+         color: ${palette.foreground};
          border-radius: 15px;
          padding: 0px 0px;
          transition: all 0.3s ease-in-out;
       }
 
       #workspaces button.active {
-         background-color: ${palette.blue};
+         background-color: ${palette.accent};
          color: ${palette.background};
          border-radius: 15px;
          min-width: 30px;
@@ -183,8 +192,8 @@ in
       }
 
       #workspaces button:hover {
-         background-color: ${palette.blue};
-         color: ${palette.background};
+         background-color: ${palette.background-alt};
+         color: ${palette.foreground};
          border-radius: 10px;
          min-width: 30px;
          background-size: 400% 400%;

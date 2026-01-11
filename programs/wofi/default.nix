@@ -91,7 +91,7 @@ in
           }
 
           #text:selected {
-            color: ${foreground};
+            color: ${background-alt};
           }
 
           #entry {

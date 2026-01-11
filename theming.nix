@@ -30,7 +30,7 @@
     #     "f2cdcd"; # Deprecated, Opening/Closing Embedded Language Tags, e.g. <?php ?>
     # };
     # base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-hard.yaml";
-    base16Scheme = "${pkgs.base16-schemes}/share/themes/atelier-estuary.yaml";
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/everforest.yaml";
 
     cursor = {
       package = pkgs.bibata-cursors;
@@ -71,7 +71,6 @@
     #   polarity = "dark";
     # image = inputs.nixy-wallpapers + "/wallpapers/f.png";
     image = ./Wallpaper_Claude-lorraine-apollo.jpeg;
-    # targets.kitty.enable = true;
   };
 
   # targets.kitty.enable = true;

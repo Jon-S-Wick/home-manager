@@ -4,13 +4,13 @@
   inputs = {
     # Specify the source of Home Manager and Nixpkgs.
     # nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs.url = "nixpkgs/release-25.05";
+    nixpkgs.url = "nixpkgs/release-25.11";
     nixvim = {
       url = "github:Jon-S-Wick/nixvim";
-
-      # url = "github:nix-community/nixvim";
-      # url = "/home/gaetan/perso/nix/nixvim/nixvim";
-      # inputs.nixpkgs.follows = "nixpkgs";
+    #
+    #   # url = "github:nix-community/nixvim";
+    #   # url = "/home/gaetan/perso/nix/nixvim/nixvim";
+    #   # inputs.nixpkgs.follows = "nixpkgs";
     };
     ghostty = {
       url = "github:ghostty-org/ghostty";
@@ -32,50 +32,64 @@
     spicetify-nix = {
       url = "github:Gerg-L/spicetify-nix";
     };
+    nix-matlab = {
+    # nix-matlab's Nixpkgs input follows Nixpkgs' nixos-unstable branch. However
+    # your Nixpkgs revision might not follow the same branch. You'd want to
+    # match your Nixpkgs and nix-matlab to ensure fontconfig related
+    # compatibility.
+    inputs.nixpkgs.follows = "nixpkgs";
+    url = "gitlab:doronbehar/nix-matlab";
+  };
+
   };
 
   outputs =
     {
       nixpkgs,
-      # ghostty,
-      # spicetify-nix,
+      ghostty,
+      spicetify-nix,
       home-manager,
+        nix-matlab,
       ...
     }@inputs:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
+     flake-overlays = [
+      nix-matlab.overlay
+    ];
+
     in
     {
-          #   homeManagerModules.home = home-manager.lib.homeManagerConfiguration  {
-          #       inherit pkgs;
-          #       modules = [
-          #
-          # {
-          #   nixpkgs.overlays = [ inputs.hyprpanel.overlay ]; # inputs.nur.overlay ];
-          #   _module.args = { inherit inputs; };
-          #           inherit inputs;
-          # }
-          # inputs.stylix.homeManagerModules.stylix
-          # inputs.spicetify-nix.homeManagerModules.default
-          #   ]; 
-          #       extraSpecialArgs  = {inherit inputs; inherit pkgs;};
-          #   };
+            homeManagerModules.home = home-manager.lib.homeManagerConfiguration  {
+                inherit pkgs;
+                modules = [
+
+          {
+            nixpkgs.overlays = [ inputs.hyprpanel.overlay ]; # inputs.nur.overlay ];
+            _module.args = { inherit inputs; };
+                    inherit inputs;
+          }
+          inputs.stylix.homeManagerModules.stylix
+          inputs.spicetify-nix.homeManagerModules.default
+            ]; 
+                extraSpecialArgs  = {inherit inputs; inherit pkgs;};
+            };
             homeConfigurations."jonwick" = home-manager.lib.homeManagerConfiguration {
-                # extraSpecialArgs = {inherit inputs; };
+                extraSpecialArgs = {inherit inputs; };
         inherit pkgs;
 
         # Specify your home configuration modules here, for example,
         # the path to your home.nix.
         modules = [
 
-          # {
-          #   # nixpkgs.overlays = [ inputs.hyprpanel.overlay ]; # inputs.nur.overlay ];
-          #   _module.args = { inherit inputs; };
-          # }
+          {
+            nixpkgs.overlays = [ inputs.hyprpanel.overlay ]; # inputs.nur.overlay ];
+            _module.args = { inherit inputs; };
+          }
           ./home.nix
-          # inputs.stylix.homeManagerModules.stylix
-          # inputs.spicetify-nix.homeManagerModules.default
+          inputs.stylix.homeManagerModules.stylix
+          inputs.spicetify-nix.homeManagerModules.default
 
         ];
 

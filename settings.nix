@@ -4,10 +4,10 @@
   gaps-in = 2;
   gaps-out = 4 * 2;
   active-opacity = 1;
-  inactive-opacity = 0.87;
+  inactive-opacity = 1;
   blur = false;
   border-size = 2;
-  animation-speed = "slow"; # "fast" | "medium" | "slow"
+  animation-speed = "fast"; # "fast" | "medium" | "slow"
   # fetch = "nerdfetch"; # "nerdfetch" | "neofetch" | "pfetch" | "none"
 
   bar = {

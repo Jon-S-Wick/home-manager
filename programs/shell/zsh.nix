@@ -10,6 +10,7 @@
   programs.zsh = {
 
     initContent = lib.mkBefore ''
+         setopt EXTENDED_HISTORY;
 export MAMBA_EXE='/nix/store/mw141k4ssdzcpkzxrfl6889arh7jmrva-micromamba-1.5.8/bin/micromamba';
 export MAMBA_ROOT_PREFIX='/home/jonwick/.local/share/micromamba';
 __mamba_setup="$("$MAMBA_EXE" shell hook --shell zsh --root-prefix "$MAMBA_ROOT_PREFIX" 2> /dev/null)"
@@ -30,6 +31,7 @@ unset __mamba_setup
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
     historySubstringSearch.enable = true;
+      
 
     # initExtraFirst = ''
     #   # bindkey -e
@@ -58,6 +60,7 @@ unset __mamba_setup
       ignoreDups = true;
       save = 10000;
       size = 10000;
+      
     };
 
     profileExtra = lib.optionalString (config.home.sessionPath != [ ]) ''
@@ -72,7 +75,7 @@ unset __mamba_setup
       clipLast = ''wl-copy "!!" '';
       clip = "wl-copy";
       sd = "cd ~ && cd $(find * -type d | fzf)";
-      nvim = "~/.config/nixvim/result/bin/nvim";
+      nvim = "/home/jonwick/.config/nixvim/result/bin/nvim";
       vim = "nvim";
       vi = "nvim";
       v = "nvim .";
@@ -87,8 +90,8 @@ unset __mamba_setup
       tree = "eza --icons=always --tree --no-quotes";
       sl = "ls";
       open = "${pkgs.xdg-utils}/bin/xdg-open";
-      icat = "${pkgs.kitty}/bin/kitty +kitten icat";
-      ssh = "kitty +kitten ssh";
+      # icat = "${pkgs.kitty}/bin/kitty +kitten icat";
+      # ssh = "kitty +kitten ssh";
 
       wireguard-import = "nmcli connection import type wireguard file";
 
