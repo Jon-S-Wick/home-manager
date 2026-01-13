@@ -59,6 +59,7 @@
     pkgs.vscode
         pkgs.bitwarden-desktop
     pkgs.igv
+        pkgs.hyprpanel
     pkgs.geary
     pkgs.iwgtk
     pkgs.samtools

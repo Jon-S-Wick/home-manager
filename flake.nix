@@ -67,7 +67,6 @@
                 modules = [
 
           {
-            nixpkgs.overlays = [ inputs.hyprpanel.overlay ]; # inputs.nur.overlay ];
             _module.args = { inherit inputs; };
                     inherit inputs;
           }
