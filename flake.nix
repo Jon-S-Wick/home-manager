@@ -20,7 +20,7 @@
     #   url = "github:nix-community/home-manager";
     #   inputs.nixpkgs.follows = "nixpkgs";
     # };
-    home-manager.url = "github:nix-community/home-manager/release-25.05";
+    home-manager.url = "github:nix-community/home-manager/release-25.11";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     apple-fonts.url = "github:Lyndeno/apple-fonts.nix";
 
@@ -28,7 +28,8 @@
       url = "github:anotherhadi/nixy-wallpapers";
       flake = false;
     };
-    stylix.url = "github:danth/stylix";
+      stylix.url = "github:nix-community/stylix/release-25.11";
+
     spicetify-nix = {
       url = "github:Gerg-L/spicetify-nix";
     };

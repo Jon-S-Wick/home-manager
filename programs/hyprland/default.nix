@@ -24,10 +24,10 @@ in
   ];
 
   home.packages = with pkgs; [
-    qt5.qtwayland
-    qt6.qtwayland
-    libsForQt5.qt5ct
-    qt6ct
+    # qt5.qtwayland
+    # qt6.qtwayland
+    # libsForQt5.qt5ct
+    # qt6ct
     hyprshot
     hyprpicker
     swappy
@@ -110,9 +110,9 @@ in
         mfact = 0.5;
       };
 
-      gestures = {
-        workspace_swipe = true;
-      };
+      # gestures = {
+      #   workspace_swipe = true;
+      # };
 
       misc = {
         vfr = true;

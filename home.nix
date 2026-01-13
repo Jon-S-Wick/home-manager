@@ -57,6 +57,7 @@
     # "Hello, world!" when run.
     # pkgs.hello
     pkgs.vscode
+        pkgs.bitwarden-desktop
     pkgs.igv
     pkgs.geary
     pkgs.iwgtk
@@ -121,6 +122,26 @@
     #   echo "Hello, ${config.home.username}!"
     # '')
   ];
+    
+
+    xdg.autostart.entries = [
+        {
+            name = "Asus";
+            exec = "${pkgs.asusctl}";
+            terminal = false;
+        }
+        {
+            name = "thunderbird";
+            exec = "${pkgs.thunderbird}";
+            terminal = false;
+        }
+        {
+            name = "Teams";
+            exec = "${pkgs.teams-for-linux}";
+            terminal = false;
+        }
+        
+    ];
   # programs.neovim = {
   #   enable = true;
   #   extraPackages = with pkgs; [

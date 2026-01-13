@@ -34,7 +34,7 @@
         # "$mod,TAB, overview:toggle" # Overview
 
         "$mod,Q, killactive," # Close window
-        "$shiftMod,T, togglefloating," # Toggle Floating
+        "$shiftMod,F, togglefloating," # Toggle Floating
         "$mod,F, fullscreen" # Toggle Fullscreen
         "$mod,left, movefocus, l" # Move focus left
         "$mod,right, movefocus, r" # Move focus Right
