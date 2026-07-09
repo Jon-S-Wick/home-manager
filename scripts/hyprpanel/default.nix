@@ -1,47 +1,85 @@
-# - ## Hyprpanel
-#- 
-#- Quick scripts to toggle, reload, hide & show hyprpanel.
-#-
-#- - `hyprpanel-toggle` - Toggle hyprpanel (hide/show).
-#- - `hyprpanel-show` - Show hyprpanel.
-#- - `hyprpanel-hide` - Hide hyprpanel.
-#- - `hyprpanel-reload` - Reload hyprpanel.
 { pkgs, ... }:
-let
-  hyprpanel-toggle = pkgs.writeShellScriptBin "hyprpanel-toggle" ''
-    hyprpanel -t bar-0
-    hyprpanel -t bar-1
-    hyprpanel -t bar-2
-    hyprpanel -t bar-3
-  '';
+{
+  programs.hyprpanel = {
+    # Configure and theme almost all options from the GUI.
+    # See 'https://hyprpanel.com/configuration/settings.html'.
+    # Default: <same as gui>
+    settings = {
 
-  hyprpanel-hide = pkgs.writeShellScriptBin "hyprpanel-hide" ''
-    status=$(hyprpanel -r "isWindowVisible('bar-0')")
-    if [[ $status == "true" ]]; then
-      hyprpanel -t bar-0
-    fi
-    status=$(hyprpanel -r "isWindowVisible('bar-1')")
-    if [[ $status == "true" ]]; then
-      hyprpanel -t bar-1
-    fi
-  '';
+      # Configure bar layouts for monitors.
+      # See 'https://hyprpanel.com/configuration/panel.html'.
+      # Default: null
+      layout = {
+        bar.layouts = {
+          "0" = {
+            left = [
+              "dashboard"
+              "workspaces"
+            ];
+            middle = [
+              "clock"
+              "media"
+            ];
+            right = [
+              "volume"
+              "systray"
+              "notifications"
+            ];
+          };
 
-  hyprpanel-show = pkgs.writeShellScriptBin "hyprpanel-show" ''
-    status=$(hyprpanel -r "isWindowVisible('bar-0')")
-    if [[ $status == "false" ]]; then
-      hyprpanel -t bar-0
-    fi
-    status=$(hyprpanel -r "isWindowVisible('bar-1')")
-    if [[ $status == "false" ]]; then
-      hyprpanel -t bar-1
-    fi
-  '';
+          "1" = {
+            left = [
+              "dashboard"
+              "workspaces"
+            ];
+            middle = [
+              "clock"
+              "media"
+            ];
+            right = [
+              "volume"
+              "systray"
+              "notifications"
+            ];
+          };
+          "2" = {
+            left = [
+              "dashboard"
+              "workspaces"
+            ];
+            middle = [
+              "clock"
+              "media"
+            ];
+            right = [
+              "volume"
+              "systray"
+              "notifications"
+            ];
+          };
+        };
+      };
 
-  hyprpanel-reload = pkgs.writeShellScriptBin "hyprpanel-reload" ''
-    [ $(pgrep "ags") ] && pkill ags
-    hyprctl dispatch exec hyprpanel
-  '';
-in {
-  home.packages =
-    [ hyprpanel-toggle hyprpanel-reload hyprpanel-hide hyprpanel-show ];
+      bar.launcher.autoDetectIcon = true;
+      bar.workspaces.show_icons = true;
+
+      menus.clock = {
+        time = {
+          military = false;
+          hideSeconds = true;
+        };
+        weather.unit = "metric";
+      };
+
+      menus.dashboard.directories.enabled = false;
+      menus.dashboard.stats.enable_gpu = true;
+
+      theme.bar.transparent = true;
+
+      theme.font = {
+        name = "CaskaydiaCove NF";
+        size = "16px";
+      };
+    };
+  };
 }

@@ -1,7 +1,12 @@
-{ pkgs, inputs, ... }:
+{
+  pkgs,
+  inputs,
+  ...
+}:
 {
   stylix = {
     enable = true;
+    targets.ghostty.enable = true;
 
     # Edited catppuccin
     # base16Scheme = {
@@ -32,23 +37,30 @@
     # base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-hard.yaml";
     base16Scheme = "${pkgs.base16-schemes}/share/themes/everforest.yaml";
 
+    # override.base0C = "90c0e4"; # make teal less intense
     cursor = {
       package = pkgs.bibata-cursors;
       name = "Bibata-Modern-Ice";
       size = 20;
     };
+    icons = {
+      enable = true;
+      package = pkgs.morewaita-icon-theme;
+      light = "MoreWaita";
+      dark = "MoreWaita";
+    };
 
     fonts = {
       monospace = {
-        package = pkgs.jetbrains-mono;
-        name = "JetBrains Mono Nerd Font";
+        package = pkgs.nerd-fonts.hack;
+        # name = "JetBrains Mono Nerd Font";
       };
       sansSerif = {
-        package = inputs.apple-fonts.packages.${pkgs.system}.sf-pro-nerd;
+        package = inputs.apple-fonts.packages.${pkgs.stdenv.hostPlatform.system}.sf-pro-nerd;
         name = "SFProDisplay Nerd Font";
       };
       serif = {
-        package = inputs.apple-fonts.packages.${pkgs.system}.sf-pro-nerd;
+        package = inputs.apple-fonts.packages.${pkgs.stdenv.hostPlatform.system}.sf-pro-nerd;
         name = "SFProDisplay Nerd Font";
       };
       emoji = {
@@ -62,6 +74,7 @@
         terminal = 13;
       };
     };
+    # targets.ghostty.enable
 
     # targets.nixvim.transparentBackground = {
     #   main = true;
@@ -70,7 +83,10 @@
     # targets.nixvim.plugin = "base16-nvim";
     #   polarity = "dark";
     # image = inputs.nixy-wallpapers + "/wallpapers/f.png";
-    image = ./Wallpaper_Claude-lorraine-apollo.jpeg;
+    image = ./train_and_lake.png;
+    targets.hyprland.enable = true;
+    targets.hyprland.hyprpaper.enable = true;
+    targets.obsidian.enable = false;
   };
 
   # targets.kitty.enable = true;

@@ -9,6 +9,7 @@
     ./night-shift
     ./screenshot
     ./nerdfont-fzf
+    ./changeblur
     ./notification
     ./system
   ];

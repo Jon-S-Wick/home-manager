@@ -51,7 +51,7 @@ let
             hyprctl dispatch exit
             ;;
           "Suspend")
-            systemctl suspend
+            chvt 63 && systemctl suspend
             ;;
           "Reboot")
             systemctl reboot

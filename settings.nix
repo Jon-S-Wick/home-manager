@@ -1,13 +1,13 @@
 {
 
-  rounding = 15;
-  gaps-in = 2;
-  gaps-out = 4 * 2;
-  active-opacity = 1;
-  inactive-opacity = 1;
-  blur = false;
-  border-size = 2;
-  animation-speed = "fast"; # "fast" | "medium" | "slow"
+  rounding = 6;
+  gaps-in = 4;
+  gaps-out = 6;
+  active-opacity = 0.95;
+  inactive-opacity = 0.90;
+  blur = true;
+  border-size = 1;
+  animation-speed = "medium"; # "fast" | "medium" | "slow"
   # fetch = "nerdfetch"; # "nerdfetch" | "neofetch" | "pfetch" | "none"
 
   bar = {

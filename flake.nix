@@ -3,24 +3,26 @@
 
   inputs = {
     # Specify the source of Home Manager and Nixpkgs.
-    # nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs.url = "nixpkgs/release-25.11";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    # nixpkgs.url = "nixpkgs/release-25.11";
     nixvim = {
       url = "github:Jon-S-Wick/nixvim";
-    #
-    #   # url = "github:nix-community/nixvim";
-    #   # url = "/home/gaetan/perso/nix/nixvim/nixvim";
-    #   # inputs.nixpkgs.follows = "nixpkgs";
+      #
+      #   # url = "github:nix-community/nixvim";
+      #   # url = "/home/gaetan/perso/nix/nixvim/nixvim";
+      #   # inputs.nixpkgs.follows = "nixpkgs";
     };
-    ghostty = {
-      url = "github:ghostty-org/ghostty";
-    };
+    # ghostty = {
+    #   url = "github:ghostty-org/ghostty";
+    # };
     hyprpanel.url = "github:Jas-SinghFSU/HyprPanel";
     # home-manager = {
     #   url = "github:nix-community/home-manager";
     #   inputs.nixpkgs.follows = "nixpkgs";
     # };
-    home-manager.url = "github:nix-community/home-manager/release-25.11";
+    # home-manager.url = "github:nix-community/home-manager/release-25.11";
+    home-manager.url = "github:nix-community/home-manager";
+
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     apple-fonts.url = "github:Lyndeno/apple-fonts.nix";
 
@@ -28,55 +30,64 @@
       url = "github:anotherhadi/nixy-wallpapers";
       flake = false;
     };
-      stylix.url = "github:nix-community/stylix/release-25.11";
+    stylix.url = "github:nix-community/stylix";
 
     spicetify-nix = {
       url = "github:Gerg-L/spicetify-nix";
     };
     nix-matlab = {
-    # nix-matlab's Nixpkgs input follows Nixpkgs' nixos-unstable branch. However
-    # your Nixpkgs revision might not follow the same branch. You'd want to
-    # match your Nixpkgs and nix-matlab to ensure fontconfig related
-    # compatibility.
-    inputs.nixpkgs.follows = "nixpkgs";
-    url = "gitlab:doronbehar/nix-matlab";
-  };
+      # nix-matlab's Nixpkgs input follows Nixpkgs' nixos-unstable branch. However
+      # your Nixpkgs revision might not follow the same branch. You'd want to
+      # match your Nixpkgs and nix-matlab to ensure fontconfig related
+      # compatibility.
+      inputs.nixpkgs.follows = "nixpkgs";
+      url = "gitlab:doronbehar/nix-matlab";
+    };
+    winapps = {
+      url = "github:winapps-org/winapps";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    hyprdynamicmonitors.url = "github:fiffeek/hyprdynamicmonitors";
 
   };
 
   outputs =
     {
       nixpkgs,
-      ghostty,
+      # ghostty,
       spicetify-nix,
       home-manager,
-        nix-matlab,
+      nix-matlab,
       ...
     }@inputs:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
-     flake-overlays = [
-      nix-matlab.overlay
-    ];
+      flake-overlays = [
+        nix-matlab.overlay
+      ];
 
     in
     {
-            homeManagerModules.home = home-manager.lib.homeManagerConfiguration  {
-                inherit pkgs;
-                modules = [
+      homeManagerModules.home = home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+        modules = [
 
           {
             _module.args = { inherit inputs; };
-                    inherit inputs;
+            inherit inputs;
           }
           inputs.stylix.homeManagerModules.stylix
           inputs.spicetify-nix.homeManagerModules.default
-            ]; 
-                extraSpecialArgs  = {inherit inputs; inherit pkgs;};
-            };
-            homeConfigurations."jonwick" = home-manager.lib.homeManagerConfiguration {
-                extraSpecialArgs = {inherit inputs; };
+        ];
+        extraSpecialArgs = {
+          inherit inputs;
+          inherit pkgs;
+        };
+      };
+      homeConfigurations."jonwick" = home-manager.lib.homeManagerConfiguration {
+        extraSpecialArgs = { inherit inputs; };
         inherit pkgs;
 
         # Specify your home configuration modules here, for example,
@@ -90,6 +101,7 @@
           ./home.nix
           inputs.stylix.homeManagerModules.stylix
           inputs.spicetify-nix.homeManagerModules.default
+          inputs.hyprdynamicmonitors.homeManagerModules.default
 
         ];
 

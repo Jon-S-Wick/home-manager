@@ -26,13 +26,14 @@ let
     # set -g @tmux-gruvbox 'dark'
 
   '';
-in {
+in
+{
   programs.tmux = {
     enable = true;
     mouse = true;
     shell = "${pkgs.zsh}/bin/zsh";
     prefix = "C-space";
-    terminal = "kitty";
+    terminal = "tmux-256color";
     keyMode = "vi";
 
     extraConfig = ''
@@ -42,6 +43,8 @@ in {
       bind-key l select-pane -R
 
       set -gq allow-passthrough on
+          set -ga terminal-overrides ",*:Tc"
+
       bind-key x kill-pane # skip "kill-pane 1? (y/n)" prompt
 
       bind-key -n C-Tab next-window
@@ -53,7 +56,7 @@ in {
       tmuxPlugins.vim-tmux-navigator
       tmuxPlugins.resurrect
       tmuxPlugins.sensible
-      tmuxPlugins.tokyo-night-tmux
+      # tmuxPlugins.tokyo-night-tmux
     ];
   };
   home.packages = [ Config ];
