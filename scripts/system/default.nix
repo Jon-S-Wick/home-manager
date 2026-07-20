@@ -110,4 +110,29 @@ let
       ${pkgs.hyprlock}/bin/hyprlock
     '';
 
-in { home.packages = [ menu powermenu lock quickmenu ]; }
+  search = pkgs.writeShellScriptBin "search"
+    # bash
+    ''
+      if pgrep wofi; then
+        pkill wofi
+      else
+        wofi -p " Search" --show dmenu
+      fi
+    '';
+
+  bwmenu = pkgs.writeShellScriptBin "bwmenu"
+    # bash
+    ''
+      if pgrep wofi; then
+        pkill wofi
+      else
+        entry=$(${pkgs.rbw}/bin/rbw list | wofi -p " Bitwarden" --dmenu)
+        if [ -n "$entry" ]; then
+          password=$(${pkgs.rbw}/bin/rbw get password "$entry")
+          echo -n "$password" | wl-copy
+          notify-send "Bitwarden" "Password for $entry copied to clipboard"
+        fi
+      fi
+    '';
+
+in { home.packages = [ menu powermenu lock quickmenu search bwmenu ]; }

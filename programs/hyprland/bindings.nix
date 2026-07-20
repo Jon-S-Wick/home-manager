@@ -52,13 +52,14 @@
       "$shiftMod,PRINT, exec, screenshot region" # Screenshot region
       "ALT,PRINT, exec, screenshot region swappy" # Screenshot region then edit
 
-      "$mod,P,exec, screenshot region" # Screenshot region
+      "$mod,P, exec, screenshot region" # Screenshot region
       "$shiftMod, P, exec, screenshot monitor"
 
       # "$shiftMod,S, exec, ${pkgs.qutebrowser}/bin/qutebrowser :open $(wofi --show dmenu -L 1 -p ' Search on internet')" # Search on internet with wofi
       "$mod,C, exec, clipboard" # Clipboard picker with wofi
       "$shiftMod,E, exec, ${pkgs.wofi-emoji}/bin/wofi-emoji" # Emoji picker with wofi
-      "$mod,B, exec, changeblur" # Toggle blur
+      "$mod,B, exec, bwmenu" # Bitwarden vault
+      "$shiftMod,B, exec, changeblur" # Toggle blur
       "$mod,F2, exec, night-shift" # Toggle night shift
       "$mod,F3, exec, night-shift" # Toggle night shift
     ]

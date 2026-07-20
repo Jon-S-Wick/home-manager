@@ -91,6 +91,15 @@
       c = "clear";
       clera = "clear";
       celar = "clear";
+
+      # Bitwarden
+      bwp = "rbw get password";
+      bwu = "rbw get username";
+      bwt = "rbw get totp";
+      bwf = "rbw get fields";
+      bwl = "rbw list";
+      bws = "rbw list | fzf --preview 'rbw get {}'";
+      bwe = "RBW_EDITOR=nvim rbw edit $(rbw list | fzf)";
       e = "exit";
       cd = "z";
       b = "cd -";

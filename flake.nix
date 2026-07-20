@@ -15,7 +15,7 @@
     # ghostty = {
     #   url = "github:ghostty-org/ghostty";
     # };
-    hyprpanel.url = "github:Jas-SinghFSU/HyprPanel";
+    # hyprpanel.url = "github:Jas-SinghFSU/HyprPanel"; # no longer needed, now in nixpkgs
     # home-manager = {
     #   url = "github:nix-community/home-manager";
     #   inputs.nixpkgs.follows = "nixpkgs";
@@ -95,7 +95,6 @@
         modules = [
 
           {
-            nixpkgs.overlays = [ inputs.hyprpanel.overlay ]; # inputs.nur.overlay ];
             _module.args = { inherit inputs; };
           }
           ./home.nix

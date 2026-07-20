@@ -31,6 +31,7 @@
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
 
+  home.pointerCursor.enable = true;
   stylix.targets.mako.enable = false;
   # stylix.targets.sddm.enable = true;
 
@@ -107,6 +108,7 @@
       pkgs.nerd-fonts.lilex
       pkgs.nerd-fonts.hack
       pkgs.bitwarden-desktop
+      pkgs.pinentry-all
       pkgs.bitwarden-cli
       pkgs.igv
       pkgs.hyprpanel
@@ -124,6 +126,7 @@
       pkgs.adguardhome
       pkgs.vlc
       pkgs.bitwarden-menu
+      pkgs.rbw
       pkgs.pwvucontrol
       pkgs.jdt-language-server
       pkgs.opencode
