@@ -1,5 +1,5 @@
 # Clipman allows you to save and retrieve clipboard history.
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 let
   clipboard-clear = pkgs.writeShellScriptBin "clipboard-clear" ''
     clipman clear --all
@@ -9,9 +9,23 @@ let
     clipman pick --tool=wofi
   '';
 
-in {
-  wayland.windowManager.hyprland.settings.exec-once =
-    [ "${clipboard-clear}" "wl-paste -t text --watch clipman store" ];
-  home.packages = with pkgs; [ clipman clipboard clipboard-clear ];
+in
+{
+  wayland.windowManager.hyprland.settings.on = [
+    {
+      _args = [
+        "hyprland.start"
+        (lib.generators.mkLuaInline ''function()
+  hl.exec_cmd("${clipboard-clear}/bin/clipboard-clear")
+  hl.exec_cmd("wl-paste -t text --watch clipman store")
+end'')
+      ];
+    }
+  ];
+  home.packages = with pkgs; [
+    clipman
+    clipboard
+    clipboard-clear
+  ];
   services.clipman.enable = true;
 }

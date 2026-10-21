@@ -72,7 +72,7 @@ GDK_BACKEND=$BACKEND yad --width=$dynamic_width --height=$dynamic_height \
 " CTRL SHIFT Print" "screenshot timer 10 secs " "(grim)" \
 "ALT Print" "Screenshot active window" "active window only" \
 "CTRL ALT P" "power-menu" "(wlogout)" \
-"CTRL ALT L" "screen lock" "(hyprlock)" \
+"CTRL ALT L" "screen lock" "(noctalia)" \
 "CTRL ALT Del" "Hyprland Exit" "(SAVE YOUR WORK!!!)" \
 " F" "Fullscreen" "Toggles to full screen" \
 " ALT L" "Toggle Dwindle | Master Layout" "Hyprland Layout" \

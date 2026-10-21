@@ -4,7 +4,7 @@
 #-
 #- - `menu` - Open wofi with drun mode. (wofi)
 #- - `powermenu` - Open power dropdown menu. (wofi)
-#- - `lock` - Lock the screen. (hyprlock)
+#- - `lock` - Lock the screen. (noctalia)
 { pkgs, ... }:
 
 let
@@ -45,7 +45,7 @@ let
 
         case $selected in
           "Lock")
-            ${pkgs.hyprlock}/bin/hyprlock
+            noctalia msg session lock
             ;;
           "Logout")
             hyprctl dispatch exit
@@ -107,7 +107,7 @@ let
   lock = pkgs.writeShellScriptBin "lock"
     # bash
     ''
-      ${pkgs.hyprlock}/bin/hyprlock
+      noctalia msg session lock
     '';
 
   search = pkgs.writeShellScriptBin "search"

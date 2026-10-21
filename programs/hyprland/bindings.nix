@@ -1,67 +1,360 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
+  services.playerctld.enable = true;
+
   wayland.windowManager.hyprland.settings = {
     bind = [
+      {
+        _args = [
+          (lib.generators.mkLuaInline ''shiftMod .. " + h"'')
+          (lib.generators.mkLuaInline ''hl.dsp.window.resize({ x = -50, y = 0, relative = true })'')
+        ];
+      }
+      {
+        _args = [
+          (lib.generators.mkLuaInline ''shiftMod .. " + l"'')
+          (lib.generators.mkLuaInline ''hl.dsp.window.resize({ x = 50, y = 0, relative = true })'')
+        ];
+      }
+      {
+        _args = [
+          (lib.generators.mkLuaInline ''shiftMod .. " + k"'')
+          (lib.generators.mkLuaInline ''hl.dsp.window.resize({ x = 0, y = -50, relative = true })'')
+        ];
+      }
+      {
+        _args = [
+          (lib.generators.mkLuaInline ''shiftMod .. " + j"'')
+          (lib.generators.mkLuaInline ''hl.dsp.window.resize({ x = 0, y = 50, relative = true })'')
+        ];
+      }
 
-      # "$shiftMod, h, resizeactive,-50 0"
-      # "$shiftMod, l, resizeactive,50 0"
-      # "$shiftMod, k, resizeactive,0 -50"
-      # "$shiftMod, j, resizeactive,0 50"
+      {
+        _args = [
+          (lib.generators.mkLuaInline ''mod .. " + h"'')
+          (lib.generators.mkLuaInline ''hl.dsp.focus({ direction = "left" })'')
+        ];
+      }
+      {
+        _args = [
+          (lib.generators.mkLuaInline ''mod .. " + l"'')
+          (lib.generators.mkLuaInline ''hl.dsp.focus({ direction = "right" })'')
+        ];
+      }
+      {
+        _args = [
+          (lib.generators.mkLuaInline ''mod .. " + k"'')
+          (lib.generators.mkLuaInline ''hl.dsp.focus({ direction = "up" })'')
+        ];
+      }
+      {
+        _args = [
+          (lib.generators.mkLuaInline ''mod .. " + j"'')
+          (lib.generators.mkLuaInline ''hl.dsp.focus({ direction = "down" })'')
+        ];
+      }
 
-      "$shiftMod,h, movefocus, l" # Move focus left
-      "$shiftMod,l, movefocus, r" # Move focus Right
-      "$shiftMod,k, movefocus, u" # Move focus Up
-      "$shiftMod,j, movefocus, d" # Move focus Down
+      {
+        _args = [
+          (lib.generators.mkLuaInline ''ctrlMod .. " + h"'')
+          (lib.generators.mkLuaInline ''hl.dsp.window.move({ direction = "left" })'')
+        ];
+      }
+      {
+        _args = [
+          (lib.generators.mkLuaInline ''ctrlMod .. " + l"'')
+          (lib.generators.mkLuaInline ''hl.dsp.window.move({ direction = "right" })'')
+        ];
+      }
+      {
+        _args = [
+          (lib.generators.mkLuaInline ''ctrlMod .. " + k"'')
+          (lib.generators.mkLuaInline ''hl.dsp.window.move({ direction = "up" })'')
+        ];
+      }
+      {
+        _args = [
+          (lib.generators.mkLuaInline ''ctrlMod .. " + j"'')
+          (lib.generators.mkLuaInline ''hl.dsp.window.move({ direction = "down" })'')
+        ];
+      }
 
-      # "$shiftMod,h, focusmonitor, l" # Move focus left
-      # "$shiftMod,l, focusmonitor, r" # Move focus Right
-      # "$shiftMod,k, focusmonitor, u" # Move focus Up
-      # "$shiftMod,j, focusmonitor, d" # Move focus Down
+      {
+        _args = [
+          (lib.generators.mkLuaInline ''mod .. " + RETURN"'')
+          (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("${pkgs.ghostty}/bin/ghostty")'')
+        ];
+      }
+      {
+        _args = [
+          (lib.generators.mkLuaInline ''mod .. " + T"'')
+          (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("${pkgs.thunar}/bin/thunar")'')
+        ];
+      }
+      {
+        _args = [
+          (lib.generators.mkLuaInline ''mod .. " + V"'')
+          (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("${pkgs.vivaldi}/bin/vivaldi")'')
+        ];
+      }
+      {
+        _args = [
+          (lib.generators.mkLuaInline ''mod .. " + X"'')
+          (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("noctalia msg panel-toggle session")'')
+        ];
+      }
+      {
+        _args = [
+          (lib.generators.mkLuaInline ''mod .. " + SPACE"'')
+          (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("noctalia msg panel-toggle launcher")'')
+        ];
+      }
+      {
+        _args = [
+          (lib.generators.mkLuaInline ''shiftMod .. " + SPACE"'')
+          (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("hyprfocus-toggle")'')
+        ];
+      }
 
-      "$ctrlMod,  h, movewindow, l"
-      "$ctrlMod,  l, movewindow, r"
-      "$ctrlMod,  k, movewindow, u"
-      "$ctrlMod,  j, movewindow, d"
+      {
+        _args = [
+          (lib.generators.mkLuaInline ''mod .. " + Q"'')
+          (lib.generators.mkLuaInline ''hl.dsp.window.close()'')
+        ];
+      }
+      {
+        _args = [
+          (lib.generators.mkLuaInline ''shiftMod .. " + F"'')
+          (lib.generators.mkLuaInline ''hl.dsp.window.float({ action = "toggle" })'')
+        ];
+      }
+      {
+        _args = [
+          (lib.generators.mkLuaInline ''ctrlMod .. " + P"'')
+          (lib.generators.mkLuaInline ''hl.dsp.window.pin({ action = "toggle" })'')
+        ];
+      }
+      {
+        _args = [
+          (lib.generators.mkLuaInline ''mod .. " + F"'')
+          (lib.generators.mkLuaInline ''hl.dsp.window.fullscreen()'')
+        ];
+      }
+      {
+        _args = [
+          (lib.generators.mkLuaInline ''ctrlMod .. " + F"'')
+          (lib.generators.mkLuaInline ''hl.dsp.window.fullscreen_state({ internal = 0, client = 2 })'')
+        ];
+      }
+      {
+        _args = [
+          "SUPER + left"
+          (lib.generators.mkLuaInline ''hl.dsp.focus({ direction = "left" })'')
+        ];
+      }
+      {
+        _args = [
+          "SUPER + right"
+          (lib.generators.mkLuaInline ''hl.dsp.focus({ direction = "right" })'')
+        ];
+      }
+      {
+        _args = [
+          "SUPER + up"
+          (lib.generators.mkLuaInline ''hl.dsp.focus({ direction = "up" })'')
+        ];
+      }
+      {
+        _args = [
+          "SUPER + down"
+          (lib.generators.mkLuaInline ''hl.dsp.focus({ direction = "down" })'')
+        ];
+      }
+      {
+        _args = [
+          (lib.generators.mkLuaInline ''shiftMod .. " + up"'')
+          (lib.generators.mkLuaInline ''hl.dsp.focus({ monitor = "-1" })'')
+        ];
+      }
+      {
+        _args = [
+          (lib.generators.mkLuaInline ''shiftMod .. " + down"'')
+          (lib.generators.mkLuaInline ''hl.dsp.focus({ monitor = "+1" })'')
+        ];
+      }
+      {
+        _args = [
+          (lib.generators.mkLuaInline ''shiftMod .. " + left"'')
+          (lib.generators.mkLuaInline ''hl.dsp.layout("addmaster")'')
+        ];
+      }
+      {
+        _args = [
+          (lib.generators.mkLuaInline ''shiftMod .. " + right"'')
+          (lib.generators.mkLuaInline ''hl.dsp.layout("removemaster")'')
+        ];
+      }
 
-      # "$mod,RETURN, exec, ${pkgs.kitty}/bin/kitty" # Kitty
-      "$mod,RETURN, exec, ${pkgs.ghostty}/bin/ghostty" # Kitty
-      "$mod,T, exec, ${pkgs.thunar}/bin/thunar" # Thunar
-      "$mod,V, exec, ${pkgs.vivaldi}/bin/vivaldi"
-      "$mod,X, exec, powermenu" # Powermenu
-      "$mod,SPACE, exec, menu" # Launcher
-      "$shiftMod,C, exec, quickmenu" # Quickmenu
-      "$shiftMod,SPACE, exec, hyprfocus-toggle" # Toggle HyprFocus
-      # "$mod,TAB, overview:toggle" # Overview
+      {
+        _args = [
+          (lib.generators.mkLuaInline ''mod .. " + PRINT"'')
+          (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("screenshot window")'')
+        ];
+      }
+      {
+        _args = [
+          "PRINT"
+          (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("screenshot monitor")'')
+        ];
+      }
+      {
+        _args = [
+          (lib.generators.mkLuaInline ''shiftMod .. " + PRINT"'')
+          (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("screenshot region")'')
+        ];
+      }
+      {
+        _args = [
+          "ALT + PRINT"
+          (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("screenshot region swappy")'')
+        ];
+      }
+      {
+        _args = [
+          (lib.generators.mkLuaInline ''mod .. " + P"'')
+          (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("screenshot region")'')
+        ];
+      }
+      {
+        _args = [
+          (lib.generators.mkLuaInline ''shiftMod .. " + P"'')
+          (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("screenshot monitor")'')
+        ];
+      }
 
-      "$mod,Q, killactive," # Close window
-      "$shiftMod,F, togglefloating," # Toggle Floating
-      "$ctrlMod, P, pin, active"
-      "$mod,F, fullscreen" # Toggle Fullscreen
-      "$ctrlMod, F, fullscreenstate, 0 2"
-      "$mod,left, movefocus, l" # Move focus left
-      "$mod,right, movefocus, r" # Move focus Right
-      "$mod,up, movefocus, u" # Move focus Up
-      "$mod,down, movefocus, d" # Move focus Down
-      "$shiftMod,up, focusmonitor, -1" # Focus previous monitor
-      "$shiftMod,down, focusmonitor, 1" # Focus next monitor
-      "$shiftMod,left, layoutmsg, addmaster" # Add to master
-      "$shiftMod,right, layoutmsg, removemaster" # Remove from master
+      {
+        _args = [
+          (lib.generators.mkLuaInline ''mod .. " + C"'')
+          (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("noctalia msg panel-toggle clipboard")'')
+        ];
+      }
+      {
+        _args = [
+          (lib.generators.mkLuaInline ''shiftMod .. " + E"'')
+          (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("noctalia msg panel-toggle launcher \"/emo\"")'')
+        ];
+      }
+      {
+        _args = [
+          (lib.generators.mkLuaInline ''mod .. " + B"'')
+          (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("noctalia msg panel-toggle launcher \"/bw\"")'')
+        ];
+      }
+      {
+        _args = [
+          (lib.generators.mkLuaInline ''shiftMod .. " + B"'')
+          (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("changeblur")'')
+        ];
+      }
+      {
+        _args = [
+          (lib.generators.mkLuaInline ''mod .. " + F2"'')
+          (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("night-shift")'')
+        ];
+      }
+      {
+        _args = [
+          (lib.generators.mkLuaInline ''mod .. " + F3"'')
+          (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("night-shift")'')
+        ];
+      }
 
-      "$mod,PRINT, exec, screenshot window" # Screenshot window
-      ",PRINT, exec, screenshot monitor" # Screenshot monitor
-      "$shiftMod,PRINT, exec, screenshot region" # Screenshot region
-      "ALT,PRINT, exec, screenshot region swappy" # Screenshot region then edit
+      {
+        _args = [
+          (lib.generators.mkLuaInline ''mod .. " + mouse:272"'')
+          (lib.generators.mkLuaInline ''hl.dsp.window.drag()'')
+          { mouse = true; }
+        ];
+      }
+      {
+        _args = [
+          (lib.generators.mkLuaInline ''mod .. " + R"'')
+          (lib.generators.mkLuaInline ''hl.dsp.window.resize()'')
+          { mouse = true; }
+        ];
+      }
 
-      "$mod,P, exec, screenshot region" # Screenshot region
-      "$shiftMod, P, exec, screenshot monitor"
+      {
+        _args = [
+          "XF86AudioMute"
+          (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("noctalia msg volume-mute")'')
+          { locked = true; }
+        ];
+      }
+      {
+        _args = [
+          "XF86AudioPlay"
+          (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("${pkgs.playerctl}/bin/playerctl --player=playerctld play-pause")'')
+          { locked = true; }
+        ];
+      }
+      {
+        _args = [
+          "XF86AudioNext"
+          (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("${pkgs.playerctl}/bin/playerctl --player=playerctld next")'')
+          { locked = true; }
+        ];
+      }
+      {
+        _args = [
+          "XF86AudioPrev"
+          (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("${pkgs.playerctl}/bin/playerctl --player=playerctld previous")'')
+          { locked = true; }
+        ];
+      }
+      {
+        _args = [
+          (lib.generators.mkLuaInline ''mod .. " + m"'')
+          (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("${pkgs.playerctl}/bin/playerctl --player=playerctld shift")'')
+          { locked = true; }
+        ];
+      }
+      {
+        _args = [
+          "switch:Lid Switch"
+          (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("clamshell")'')
+          { locked = true; }
+        ];
+      }
 
-      # "$shiftMod,S, exec, ${pkgs.qutebrowser}/bin/qutebrowser :open $(wofi --show dmenu -L 1 -p ' Search on internet')" # Search on internet with wofi
-      "$mod,C, exec, clipboard" # Clipboard picker with wofi
-      "$shiftMod,E, exec, ${pkgs.wofi-emoji}/bin/wofi-emoji" # Emoji picker with wofi
-      "$mod,B, exec, bwmenu" # Bitwarden vault
-      "$shiftMod,B, exec, changeblur" # Toggle blur
-      "$mod,F2, exec, night-shift" # Toggle night shift
-      "$mod,F3, exec, night-shift" # Toggle night shift
+      {
+        _args = [
+          "XF86AudioRaiseVolume"
+          (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("noctalia msg volume-up")'')
+          { locked = true; repeating = true; }
+        ];
+      }
+      {
+        _args = [
+          "XF86AudioLowerVolume"
+          (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("noctalia msg volume-down")'')
+          { locked = true; repeating = true; }
+        ];
+      }
+      {
+        _args = [
+          "XF86MonBrightnessUp"
+          (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("noctalia msg brightness-up")'')
+          { locked = true; repeating = true; }
+        ];
+      }
+      {
+        _args = [
+          "XF86MonBrightnessDown"
+          (lib.generators.mkLuaInline ''hl.dsp.exec_cmd("noctalia msg brightness-down")'')
+          { locked = true; repeating = true; }
+        ];
+      }
     ]
     ++ (builtins.concatLists (
       builtins.genList (
@@ -70,33 +363,20 @@
           ws = i + 1;
         in
         [
-          "$mod,code:1${toString i}, workspace, ${toString ws}"
-          "$mod SHIFT,code:1${toString i}, movetoworkspace, ${toString ws}"
+          {
+            _args = [
+              "SUPER + code:1${toString i}"
+              (lib.generators.mkLuaInline ''hl.dsp.focus({ workspace = ${toString ws} })'')
+            ];
+          }
+          {
+            _args = [
+              "SUPER + SHIFT + code:1${toString i}"
+              (lib.generators.mkLuaInline ''hl.dsp.window.move({ workspace = ${toString ws} })'')
+            ];
+          }
         ]
       ) 9
     ));
-
-    bindm = [
-      "$mod,mouse:272, movewindow" # Move Window (mouse)
-      "$mod,R, resizewindow" # Resize Window (mouse)
-    ];
-
-    bindl = [
-      ",XF86AudioMute, exec, sound-toggle" # Toggle Mute
-      ",XF86AudioPlay, exec, ${pkgs.playerctl}/bin/playerctl play-pause" # Play/Pause Song
-      ",XF86AudioNext, exec, ${pkgs.playerctl}/bin/playerctl next" # Next Song
-      ",XF86AudioPrev, exec, ${pkgs.playerctl}/bin/playerctl previous" # Previous Song
-      ",switch:Lid Switch, exec, ${pkgs.hyprlock}/bin/hyprlock" # Lock when closing Lid
-      '', switch:off:Lid Switch, exec, hyprctl keyword monitor "eDP-1,2560x1600@165.0,0x1080,1.6"''
-      '',switch:on:Lid Switch,exec,hyprctl keyword monitor "eDP-1, disable"''
-    ];
-
-    bindle = [
-      ",XF86AudioRaiseVolume, exec, sound-up" # Sound Up
-      ",XF86AudioLowerVolume, exec, sound-down" # Sound Down
-      ",XF86MonBrightnessUp, exec, brightness-up" # Brightness Up
-      ",XF86MonBrightnessDown, exec, brightness-down" # Brightness Down
-    ];
-
   };
 }

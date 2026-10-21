@@ -6,30 +6,22 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     # nixpkgs.url = "nixpkgs/release-25.11";
     nixvim = {
-      url = "github:Jon-S-Wick/nixvim";
-      #
-      #   # url = "github:nix-community/nixvim";
-      #   # url = "/home/gaetan/perso/nix/nixvim/nixvim";
-      #   # inputs.nixpkgs.follows = "nixpkgs";
+      url = "git+file:///home/jonwick/.config/nixvim";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
-    # ghostty = {
-    #   url = "github:ghostty-org/ghostty";
-    # };
-    # hyprpanel.url = "github:Jas-SinghFSU/HyprPanel"; # no longer needed, now in nixpkgs
-    # home-manager = {
-    #   url = "github:nix-community/home-manager";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
-    # home-manager.url = "github:nix-community/home-manager/release-25.11";
+    noctalia = {
+      url = "github:noctalia-dev/noctalia-shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    hyprfm.url = "github:soyeb-jim285/hyprfm";
+    torlink.url = "github:baairon/torlink";
+    psysonic.url = "github:Psysonic/psysonic";
+
     home-manager.url = "github:nix-community/home-manager";
 
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     apple-fonts.url = "github:Lyndeno/apple-fonts.nix";
 
-    nixy-wallpapers = {
-      url = "github:anotherhadi/nixy-wallpapers";
-      flake = false;
-    };
     stylix.url = "github:nix-community/stylix";
 
     spicetify-nix = {
@@ -48,7 +40,20 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    hyprdynamicmonitors.url = "github:fiffeek/hyprdynamicmonitors";
+    # hyprdynamicmonitors.url = "github:fiffeek/hyprdynamicmonitors";
+
+    monique = {
+      url = "github:ToRvaLDz/monique";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # Upstream Hyprland main, used for wayland.windowManager.hyprland.package.
+    # Hyprland 0.56.2 (latest release, latest in nixpkgs) crashes on monitor
+    # teardown; the null-deref fix only exists on main. Pinned to a known-good
+    # commit -- bump this by hand, don't let it float.
+    hyprland = {
+      url = "github:hyprwm/Hyprland/aed4830efce40190051a085653d7b297877e4068";
+    };
 
   };
 
@@ -63,10 +68,11 @@
     }@inputs:
     let
       system = "x86_64-linux";
-      pkgs = nixpkgs.legacyPackages.${system};
-      flake-overlays = [
-        nix-matlab.overlay
-      ];
+      pkgs = import nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+        overlays = [ nix-matlab.overlay ];
+      };
 
     in
     {
@@ -78,8 +84,14 @@
             _module.args = { inherit inputs; };
             inherit inputs;
           }
-          inputs.stylix.homeManagerModules.stylix
+          inputs.noctalia.homeModules.default
+          inputs.stylix.homeModules.stylix
           inputs.spicetify-nix.homeManagerModules.default
+          inputs.hyprfm.${pkgs.system}.default
+          inputs.torlink.${pkgs.system}.default
+          inputs.nixvim.packages.${pkgs.system}.nvim
+
+          inputs.psysonic.packages.${pkgs.system}.psysonic
         ];
         extraSpecialArgs = {
           inherit inputs;
@@ -98,10 +110,10 @@
             _module.args = { inherit inputs; };
           }
           ./home.nix
-          inputs.stylix.homeManagerModules.stylix
+          inputs.stylix.homeModules.stylix
           inputs.spicetify-nix.homeManagerModules.default
-          inputs.hyprdynamicmonitors.homeManagerModules.default
-
+          # inputs.hyprdynamicmonitors.homeManagerModules.default
+          inputs.noctalia.homeModules.default
         ];
 
         # Optionally use extraSpecialArgs

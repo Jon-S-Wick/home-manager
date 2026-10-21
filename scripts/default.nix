@@ -12,5 +12,6 @@
     ./changeblur
     ./notification
     ./system
+    ./clamshell
   ];
 }

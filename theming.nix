@@ -6,7 +6,9 @@
 {
   stylix = {
     enable = true;
-    targets.ghostty.enable = true;
+    targets.hyprland.enable = false;
+    targets.ghostty.enable = false;
+    # targets.zsh.enable = false;
 
     # Edited catppuccin
     # base16Scheme = {
@@ -84,8 +86,7 @@
     #   polarity = "dark";
     # image = inputs.nixy-wallpapers + "/wallpapers/f.png";
     image = ./train_and_lake.png;
-    targets.hyprland.enable = true;
-    targets.hyprland.hyprpaper.enable = true;
+    targets.hyprland.hyprpaper.enable = false;
     targets.obsidian.enable = false;
   };
 

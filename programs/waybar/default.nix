@@ -1,38 +1,378 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
+let
+  accent = "#${config.lib.stylix.colors.base0D}";
+  bg = "#${config.lib.stylix.colors.base00}";
+  bg-alt = "#${config.lib.stylix.colors.base01}";
+  fg = "#${config.lib.stylix.colors.base05}";
+  rounding = config.var.theme.rounding;
+  font = config.stylix.fonts.serif.name;
+
+  # Workspace script - queries hyprctl for window classes and maps to icons
+  workspaceScript = pkgs.writeScript "waybar-workspaces" ''
+    #!/usr/bin/env python3
+    import json, subprocess
+
+    ICON_MAP = {
+        "firefox": "󰈹",
+        "google-chrome": "󰊯",
+        "chromium-browser": "󰊯",
+        "brave-browser": "󰖟",
+        "vivaldi": "󰖟",
+        "thunderbird": "󰇰",
+        "code": "󰨞",
+        "kitty": "󰄪",
+        "foot": "󰄪",
+        "alacritty": "󰄪",
+        "wezterm": "󰄪",
+        "ghostty": "󰄪",
+        "nautilus": "󰉋",
+        "thunar": "󰉋",
+        "dolphin": "󰉋",
+        "spotify": "󰓇",
+        "discord": "󰙯",
+        "teams-for-linux": "󰊻",
+        "slack": "󰒲",
+        "telegram-desktop": "󰊫",
+        "signal": "󰭻",
+        "obsidian": "󰋊",
+        "libreoffice-writer": "󰈬",
+        "libreoffice-calc": "󰈬",
+        "libreoffice-impress": "󰈬",
+        "libreoffice": "󰈬",
+        "gimp": "󰊫",
+        "inkscape": "󰊫",
+        "blender": "󰊫",
+        "vlc": "󰕼",
+        "mpv": "󰕼",
+        "imv": "󰊫",
+        "file-roller": "󰉼",
+        "pavucontrol": "󰓃",
+        "blueman-manager": "󰂯",
+        "nm-connection-editor": "󰤨",
+        "virt-manager": "󰊫",
+        "lutris": "󰊫",
+        "steam": "󰓓",
+        "jetbrains-idea": "󰅩",
+        "jetbrains-studio": "󰅩",
+        "jetbrains-pycharm": "󰅩",
+        "jetbrains-webstorm": "󰅩",
+        "jetbrains-rider": "󰅩",
+        "jetbrains-clion": "󰅩",
+        "jetbrains-goland": "󰅩",
+        "jetbrains-datagrip": "󰅩",
+        "jetbrains-phpstorm": "󰅩",
+        "jetbrains-rubymine": "󰅩",
+        "jetbrains-appcode": "󰅩",
+        "jetbrains-cidrwebserver": "󰅩",
+        "jetbrains-cidrdebugger": "󰅩",
+        "jetbrains-cidreditor": "󰅩",
+        "jetbrains-ideservices": "󰅩",
+        "jetbrains-product-catalog": "󰅩",
+        "jetbrains-marketplace": "󰅩",
+        "jetbrains-account": "󰅩",
+        "jetbrains-clouds": "󰅩",
+        "jetbrains-decompiler": "󰅩",
+        "jetbrains-docker": "󰅩",
+        "jetbrains-editorconfig": "󰅩",
+        "jetbrains-gradle": "󰅩",
+        "jetbrains-groovy": "󰅩",
+        "jetbrains-gradle-dsl": "󰅩",
+        "jetbrains-maven": "󰅩",
+        "jetbrains-perl5": "󰅩",
+        "jetbrains-php": "󰅩",
+        "jetbrains-pyycharm": "󰅩",
+        "jetbrains-rest": "󰅩",
+        "jetbrains-ruby": "󰅩",
+        "jetbrains-scala": "󰅩",
+        "jetbrains-shell-script": "󰅩",
+        "jetbrains-sql": "󰅩",
+        "jetbrains-typescript": "󰅩",
+        "jetbrains-uml": "󰅩",
+        "jetbrains-xml": "󰅩",
+        "jetbrains-yaml": "󰅩",
+        "rider": "󰅩",
+        "pycharm": "󰅩",
+        "idea": "󰅩",
+        "webstorm": "󰅩",
+        "clion": "󰅩",
+        "goland": "󰅩",
+        "datagrip": "󰅩",
+        "phpstorm": "󰅩",
+        "rubymine": "󰅩",
+        "appcode": "󰅩",
+        "wps-office": "󰈬",
+        "wpsoffice": "󰈬",
+        "zotero": "󰎧",
+        "obs": "󰑨",
+        "zoom": "󰍱",
+        "default": "󰊯",
+    }
+
+    def to_subscript(n):
+        sub = "₀₁₂₃₄₅₆₇₈₉"
+        return "".join(sub[int(d)] for d in str(n))
+
+    def get_icon(cls):
+        cls_lower = cls.lower()
+        for key, icon in ICON_MAP.items():
+            if key in cls_lower:
+                return icon
+        return ICON_MAP["default"]
+
+    try:
+        workspaces = json.loads(subprocess.check_output(["hyprctl", "workspaces", "-j"], timeout=2))
+    except:
+        workspaces = []
+    try:
+        clients = json.loads(subprocess.check_output(["hyprctl", "clients", "-j"], timeout=2))
+    except:
+        clients = []
+    try:
+        active = json.loads(subprocess.check_output(["hyprctl", "activeworkspace", "-j"], timeout=2))["id"]
+    except:
+        active = -1
+
+    ws_clients = {}
+    for c in clients:
+        wid = c["workspace"]["id"]
+        if wid < 0:
+            continue
+        ws_clients.setdefault(wid, []).append(c)
+
+    result = []
+    for ws in workspaces:
+        wid = ws["id"]
+        if wid < 0:
+            continue
+        cls_list = ws_clients.get(wid, [])
+        icons = []
+        for c in cls_list:
+            ico = get_icon(c["class"])
+            if ico not in icons:
+                icons.append(ico)
+        icon_str = "".join(icons) if icons else "󰋜"
+        label = icon_str + to_subscript(wid)
+        tooltip_parts = [c["title"][:40] for c in cls_list if c.get("title")]
+        tooltip = f"Workspace {wid}" + (": " + ", ".join(tooltip_parts) if tooltip_parts else "")
+
+        result.append({
+            "id": wid,
+            "name": label,
+            "active": wid == active,
+            "focused": wid == active,
+            "windows": len(cls_list),
+            "tooltip": tooltip,
+        })
+
+    result.sort(key=lambda x: x["id"])
+    print(json.dumps(result))
+  '';
+
+  audioPopup = pkgs.writeShellScript "waybar-audio-popup" ''
+    #!/bin/bash
+    volume=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{print int($2 * 100)}')
+    muted=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | grep -o '\[MUTED\]')
+
+    if [ -n "$muted" ]; then
+      options="󰕾  Unmute\n─ ─ ─ ─ ─ ─ ─ ─ ─ ─\n󰝟  Volume: $volume%"
+    else
+      options="󰖁  Mute\n󰕾  Vol -5\n󰕾  Vol +5\n─ ─ ─ ─ ─ ─ ─ ─ ─ ─\n󰝟  Volume: $volume%"
+    fi
+
+    sinks=$(wpctl status | sed -n '/Audio sinks/,/^$/p' | tail -n +2 | head -n -1)
+    if [ -n "$sinks" ]; then
+      options="$options\n─ ─ ─ ─ ─ ─ ─ ─ ─ ─\n󰓃  Sinks:"
+      while IFS= read -r line; do
+        if echo "$line" | grep -q '\*'; then
+          name=$(echo "$line" | sed 's/.*\*\s*//' | sed 's/\s*.*//')
+          options="$options\n    ◉ $name"
+        else
+          name=$(echo "$line" | sed 's/.*[0-9]\.\s*//' | sed 's/\s*.*//')
+          options="$options\n    ◌ $name"
+        fi
+      done <<< "$sinks"
+    fi
+
+    chosen=$(echo -e "$options" | wofi --dmenu \
+      --prompt "" \
+      --width 300 \
+      --height 300 \
+      --style "
+        window { background-color: ${bg}; border-radius: ${toString rounding}px; }
+        #outer-box { padding: 12px; }
+        #input { background-color: ${bg-alt}; color: ${fg}; padding: 8px; border-radius: ${toString rounding}px; font-family: '${font}'; font-size: 13px; }
+        #entry { padding: 6px 8px; font-family: '${font}'; font-size: 13px; }
+        #entry:selected { background-color: ${accent}; color: ${bg}; border-radius: ${toString rounding}px; }
+        #text { color: ${fg}; }
+        #text:selected { color: ${bg}; }
+      ")
+
+    case "$chosen" in
+      *"Unmute"*) wpctl set-mute @DEFAULT_AUDIO_SINK@ 0 ;;
+      *"Mute"*) wpctl set-mute @DEFAULT_AUDIO_SINK@ 1 ;;
+      *"Vol -5"*) wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%- ;;
+      *"Vol +5"*) wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+ 2>/dev/null ;;
+    esac
+  '';
+
+  bluetoothPopup = pkgs.writeShellScript "waybar-bluetooth-popup" ''
+    #!/bin/bash
+    bt_state=$(bluetoothctl show | grep "Powered:" | awk '{print $2}')
+
+    if [ "$bt_state" = "yes" ]; then
+      options="󰂲  Turn Off\n─ ─ ─ ─ ─ ─ ─ ─ ─ ─\n󰂱  Paired Devices:"
+
+      devices=$(bluetoothctl devices Paired 2>/dev/null)
+      if [ -n "$devices" ]; then
+        while IFS= read -r line; do
+          name=$(echo "$line" | cut -d' ' -f3-)
+          mac=$(echo "$line" | awk '{print $2}')
+          info=$(bluetoothctl info "$mac" 2>/dev/null)
+          if echo "$info" | grep -q "Connected: yes"; then
+            options="$options\n    ◉ $name"
+          else
+            options="$options\n    ◌ $name"
+          fi
+        done <<< "$devices"
+      fi
+    else
+      options="󰂯  Turn On"
+    fi
+
+    chosen=$(echo -e "$options" | wofi --dmenu \
+      --prompt "" \
+      --width 300 \
+      --height 300 \
+      --style "
+        window { background-color: ${bg}; border-radius: ${toString rounding}px; }
+        #outer-box { padding: 12px; }
+        #input { background-color: ${bg-alt}; color: ${fg}; padding: 8px; border-radius: ${toString rounding}px; font-family: '${font}'; font-size: 13px; }
+        #entry { padding: 6px 8px; font-family: '${font}'; font-size: 13px; }
+        #entry:selected { background-color: ${accent}; color: ${bg}; border-radius: ${toString rounding}px; }
+        #text { color: ${fg}; }
+        #text:selected { color: ${bg}; }
+      ")
+
+    case "$chosen" in
+      *"Turn On"*) bluetoothctl power on ;;
+      *"Turn Off"*) bluetoothctl power off ;;
+    esac
+  '';
+
+  wifiPopup = pkgs.writeShellScript "waybar-wifi-popup" ''
+    #!/bin/bash
+    wifi_state=$(nmcli radio wifi)
+
+    if [ "$wifi_state" = "enabled" ]; then
+      current=$(nmcli -t -f active,ssid dev wifi | grep '^yes:' | cut -d: -f2)
+
+      options="󰤭  Turn Off Wi-Fi\n─ ─ ─ ─ ─ ─ ─ ─ ─ ─\n󰤨  Available Networks:"
+
+      networks=$(nmcli -t -f signal,ssid dev wifi | sort -rn)
+      while IFS= read -r line; do
+        signal=$(echo "$line" | cut -d: -f1)
+        ssid=$(echo "$line" | cut -d: -f2-)
+        if [ -z "$ssid" ]; then continue; fi
+        if [ "$ssid" = "$current" ]; then
+          options="$options\n    ◉ $ssid ($signal%)"
+        else
+          options="$options\n    ◌ $ssid ($signal%)"
+        fi
+      done <<< "$networks"
+    else
+      options="󰤨  Turn On Wi-Fi"
+    fi
+
+    chosen=$(echo -e "$options" | wofi --dmenu \
+      --prompt "" \
+      --width 350 \
+      --height 350 \
+      --style "
+        window { background-color: ${bg}; border-radius: ${toString rounding}px; }
+        #outer-box { padding: 12px; }
+        #input { background-color: ${bg-alt}; color: ${fg}; padding: 8px; border-radius: ${toString rounding}px; font-family: '${font}'; font-size: 13px; }
+        #entry { padding: 6px 8px; font-family: '${font}'; font-size: 13px; }
+        #entry:selected { background-color: ${accent}; color: ${bg}; border-radius: ${toString rounding}px; }
+        #text { color: ${fg}; }
+        #text:selected { color: ${bg}; }
+      ")
+
+    case "$chosen" in
+      *"Turn On"*) nmcli radio wifi on ;;
+      *"Turn Off"*) nmcli radio wifi off ;;
+    esac
+  '';
+
+  audioScript = pkgs.writeShellScript "waybar-audio-json" ''
+    volume=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{print int($2 * 100)}')
+    muted=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | grep -q '\[MUTED\]' && echo "true" || echo "false")
+    if [ "$muted" = "true" ]; then
+      echo '{"text": "󰝟", "tooltip": "Muted", "class": "muted"}'
+    elif [ "$volume" -lt 30 ]; then
+      echo '{"text": "󰕿", "tooltip": "Volume: '"$volume"'%", "class": "low"}'
+    elif [ "$volume" -lt 70 ]; then
+      echo '{"text": "󰖀", "tooltip": "Volume: '"$volume"'%", "class": "medium"}'
+    else
+      echo '{"text": "󰕾", "tooltip": "Volume: '"$volume"'%", "class": "high"}'
+    fi
+  '';
+
+  bluetoothScript = pkgs.writeShellScript "waybar-bluetooth-json" ''
+    powered=$(bluetoothctl show 2>/dev/null | grep "Powered:" | awk '{print $2}')
+    connected=$(bluetoothctl info 2>/dev/null | grep "Connected: yes" | wc -l)
+    if [ "$powered" != "yes" ]; then
+      echo '{"text": "󰂲", "tooltip": "Off", "class": "off"}'
+    elif [ "$connected" -gt 0 ]; then
+      echo '{"text": "󰂱", "tooltip": "Connected", "class": "connected"}'
+    else
+      echo '{"text": "󰂯", "tooltip": "On", "class": "on"}'
+    fi
+  '';
+in
 {
   home.packages = [
     pkgs.wttrbar
     pkgs.waybar-mpris
+    pkgs.blueman
   ];
 
   programs.waybar = {
-
     enable = true;
     settings = {
       mainBar = {
         layer = "top";
         position = "top";
-        margin = "9 13 10 18";
+        margin = "8 12 0 12";
+        height = 36;
+        spacing = 4;
 
         modules-left = [
-          "hyprland/workspaces"
+          "custom/workspaces"
           "hyprland/language"
-          "keyboard-state"
-          "hyprland/submap"
           "wlr/taskbar"
         ];
-        modules-center = [ "clock" ];
+
+        modules-center = [
+          "clock"
+        ];
+
         modules-right = [
-          "pulseaudio"
-          "custom/mem"
-          "cpu"
-          "backlight"
+          "custom/audio"
+          "custom/bluetooth"
+          "network"
           "battery"
           "tray"
         ];
 
-        "hyprland/workspaces" = {
-          disable-scroll = true;
+        "custom/workspaces" = {
+          format = "{name}";
+          return-type = "json";
+          exec = "${workspaceScript}";
+          on-click = "activate";
+          sort-by-number = true;
+          active-only = false;
+          tooltip = true;
+          interval = 1;
         };
 
         "hyprland/language" = {
@@ -42,90 +382,35 @@
           tooltip = false;
         };
 
-        "keyboard-state" = {
-          #numlock = true;
-          capslock = true;
-          format = "{icon} ";
-          format-icons = {
-            locked = " ";
-            unlocked = "";
-          };
-        };
-
         "clock" = {
-          # timezone = "America/New_York";
           tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
           format = "{:%a; %d %b, %I:%M %p}";
         };
 
-        "custom/weather" = {
+        "custom/audio" = {
           format = "{}";
-          tooltip = true;
-          interval = 1800;
-          exec = "$HOME/.config/waybar/scripts/wttr.py";
           return-type = "json";
-        };
-
-        "pulseaudio" = {
-          # scroll-step = 1; # %, can be a float
-          reverse-scrolling = 1;
-          format = "{volume}% {icon} {format_source}";
-          format-bluetooth = "{volume}% {icon} {format_source}";
-          format-bluetooth-muted = " {icon} {format_source}";
-          format-muted = " {format_source}";
-          format-source = "{volume}% ";
-          format-source-muted = "";
-          format-icons = {
-            headphone = "";
-            hands-free = "";
-            headset = "";
-            phone = "";
-            portable = "";
-            car = "";
-            default = [
-              ""
-              ""
-              ""
-            ];
-          };
-          on-click = "pavucontrol";
-          min-length = 13;
-        };
-
-        "custom/mem" = {
-          format = "{} ";
-          interval = 3;
-          exec = "free -h | awk '/Mem:/{printf $3}'";
+          exec = "${audioScript}";
+          on-click = "${audioPopup}";
           tooltip = false;
+          interval = 1;
         };
 
-        "cpu" = {
-          interval = 2;
-          format = "{usage}% ";
-          min-length = 6;
-        };
-
-        "temperature" = {
-          # thermal-zone = 2;
-          # hwmon-path = "/sys/class/hwmon/hwmon2/temp1_input";
-          critical-threshold = 80;
-          # format-critical = "{temperatureC}°C {icon}";
-          format = "{temperatureC}°C {icon}";
-          format-icons = [
-            ""
-            ""
-            ""
-            ""
-            ""
-          ];
+        "custom/bluetooth" = {
+          format = "{}";
+          return-type = "json";
+          exec = "${bluetoothScript}";
+          on-click = "${bluetoothPopup}";
           tooltip = false;
+          interval = 5;
         };
 
-        "backlight" = {
-          device = "intel_backlight";
-          format = "{percent}% {icon}";
-          format-icons = [ "" ];
-          min-length = 7;
+        "network" = {
+          format-wifi = "󰤨 ";
+          format-ethernet = "󰈀 ";
+          format-disconnected = "󰤭 ";
+          tooltip-format = "{ifname}: {ipaddr}/{cidr}";
+          on-click = "${wifiPopup}";
         };
 
         battery = {
@@ -134,29 +419,27 @@
             critical = 15;
           };
           format = "{capacity}% {icon}";
-          format-charging = "{capacity}% ";
-          format-plugged = "{capacity}% ";
+          format-charging = "{capacity}% 󰁄";
+          format-plugged = "{capacity}% 󰂄";
           format-alt = "{time} {icon}";
           format-icons = [
-            ""
-            ""
-            ""
-            ""
-            ""
-            ""
-            ""
-            ""
-            ""
-            ""
+            "󰁺"
+            "󰁻"
+            "󰁼"
+            "󰁽"
+            "󰁾"
+            "󰁿"
+            "󰂀"
+            "󰂁"
+            "󰂂"
+            "󰁹"
           ];
-          on-update = "$HOME/.config/waybar/scripts/check_battery.sh";
         };
 
         tray = {
           icon-size = 16;
-          spacing = 0;
+          spacing = 8;
         };
-
       };
     };
 
@@ -164,200 +447,145 @@
       * {
           border: none;
           border-radius: 0;
-          /* `otf-font-awesome` is required to be installed for icons */
-          font-family: JetBrains Mono;
-          font-weight: bold;
-          min-height: 20px;
+          font-family: "SFProDisplay Nerd Font", "Noto Color Emoji", sans-serif;
+          font-weight: 600;
+          min-height: 0;
       }
 
       window#waybar {
-          background: transparent;
+          background: rgba(30, 35, 30, 0.85);
+          color: #d4c7aa;
       }
 
       window#waybar.hidden {
           opacity: 0.2;
       }
 
-      #workspaces {
-          margin-right: 8px;
-          border-radius: 5px;
-          transition: none;
-          background: #383c4a;
+      /* Workspaces */
+      #custom-workspaces {
+          margin: 4px 4px 4px 8px;
+          padding: 0 4px;
+          border-radius: 10px;
+          background: rgba(50, 55, 50, 0.9);
       }
 
-      #workspaces button {
-          transition: none;
-          color: #7c818c;
-          background: transparent;
-          padding: 5px;
-          font-size: 18px;
+      #custom-workspaces button {
+          padding: 0 8px;
+          color: #859289;
+          font-size: 14px;
+          min-width: 18px;
+          border-radius: 8px;
+          margin: 2px;
+          transition: all 0.2s ease;
       }
 
-      #workspaces button.persistent {
-          color: #7c818c;
+      #custom-workspaces button:hover {
+          background: rgba(133, 146, 137, 0.3);
+          color: #d4c7aa;
+      }
+
+      #custom-workspaces button.active {
+          background: #a7c080;
+          color: #2d3530;
+          font-weight: 700;
+      }
+
+      #custom-workspaces button.urgent {
+          background: #e67e80;
+          color: #2d3530;
+      }
+
+      /* Language */
+      #language {
+          margin: 4px 0;
+          padding: 0 12px;
+          border-radius: 10px;
+          color: #d4c7aa;
+          background: rgba(50, 55, 50, 0.9);
           font-size: 12px;
       }
 
-      /* https://github.com/Alexays/Waybar/wiki/FAQ#the-workspace-buttons-have-a-strange-hover-effect */
-      #workspaces button:hover {
-          transition: none;
-          box-shadow: inherit;
-          text-shadow: inherit;
-          border-radius: inherit;
-          color: #383c4a;
-          background: #7c818c;
-      }
-
-      #workspaces button.active {
-          background: #4e5263;
-          color: white;
-          border-radius: inherit;
-      }
-
-      #language {
-          padding-left: 16px;
-          padding-right: 8px;
-          border-radius: 10px 0px 0px 10px;
-          transition: none;
-          color: #ffffff;
-          background: #383c4a;
-      }
-
-      #keyboard-state {
-          margin-right: 8px;
-          padding-right: 16px;
-          border-radius: 0px 10px 10px 0px;
-          transition: none;
-          color: #ffffff;
-          background: #383c4a;
-      }
-
-      #custom-pacman {
-          padding-left: 16px;
-          padding-right: 8px;
-          border-radius: 10px 0px 0px 10px;
-          transition: none;
-          color: #ffffff;
-          background: #383c4a;
-      }
-
-      #custom-mail {
-          margin-right: 8px;
-          padding-right: 16px;
-          border-radius: 0px 10px 10px 0px;
-          transition: none;
-          color: #ffffff;
-          background: #383c4a;
-      }
-
-      #submap {
-          padding-left: 16px;
-          padding-right: 16px;
+      /* Taskbar */
+      #taskbar {
+          margin: 4px 8px;
+          padding: 0 8px;
           border-radius: 10px;
-          transition: none;
-          color: #ffffff;
-          background: #383c4a;
+          background: rgba(50, 55, 50, 0.9);
       }
 
+      #taskbar button {
+          padding: 0 8px;
+          margin: 2px;
+          border-radius: 8px;
+          color: #859289;
+          transition: all 0.2s ease;
+      }
+
+      #taskbar button.active {
+          background: #a7c080;
+          color: #2d3530;
+      }
+
+      /* Clock */
       #clock {
-          padding-left: 16px;
-          padding-right: 16px;
-          border-radius: 10px 0px 0px 10px;
-          transition: none;
-          color: #ffffff;
-          background: #383c4a;
-      }
-
-      #custom-weather {
-          padding-right: 16px;
-          border-radius: 0px 10px 10px 0px;
-          transition: none;
-          color: #ffffff;
-          background: #383c4a;
-      }
-
-      #pulseaudio {
-          margin-right: 8px;
-          padding-left: 16px;
-          padding-right: 16px;
+          margin: 4px 8px;
+          padding: 0 16px;
           border-radius: 10px;
-          transition: none;
-          color: #ffffff;
-          background: #383c4a;
+          color: #d4c7aa;
+          background: rgba(50, 55, 50, 0.9);
+          font-size: 13px;
       }
 
-      #pulseaudio.muted {
-          background-color: #90b1b1;
-          color: #2a5c45;
-      }
-
-      #custom-mem {
-          margin-right: 8px;
-          padding-left: 16px;
-          padding-right: 16px;
+      /* Custom modules (audio, bluetooth) */
+      #custom-audio,
+      #custom-bluetooth,
+      #network,
+      #battery,
+      #tray {
+          margin: 4px 2px;
+          padding: 0 10px;
           border-radius: 10px;
-          transition: none;
-          color: #ffffff;
-          background: #383c4a;
+          background: rgba(50, 55, 50, 0.9);
+          color: #d4c7aa;
+          font-size: 15px;
       }
 
-      #cpu {
-          margin-right: 8px;
-          padding-left: 16px;
-          padding-right: 16px;
-          border-radius: 10px;
-          transition: none;
-          color: #ffffff;
-          background: #383c4a;
+      #custom-audio:hover,
+      #custom-bluetooth:hover,
+      #network:hover {
+          background: rgba(167, 192, 128, 0.3);
+          color: #a7c080;
       }
 
-      #temperature {
-          margin-right: 8px;
-          padding-left: 16px;
-          padding-right: 16px;
-          border-radius: 10px;
-          transition: none;
-          color: #ffffff;
-          background: #383c4a;
+      #custom-audio.muted {
+          color: #859289;
       }
 
-      #temperature.critical {
-          background-color: #eb4d4b;
+      #custom-bluetooth.off {
+          color: #859289;
       }
 
-      #backlight {
-          margin-right: 8px;
-          padding-left: 16px;
-          padding-right: 16px;
-          border-radius: 10px;
-          transition: none;
-          color: #ffffff;
-          background: #383c4a;
+      #network {
+          font-size: 15px;
       }
 
+      /* Battery */
       #battery {
-          margin-right: 8px;
-          padding-left: 16px;
-          padding-right: 16px;
-          border-radius: 10px;
-          transition: none;
-          color: #ffffff;
-          background: #383c4a;
+          font-size: 12px;
       }
 
       #battery.charging {
-          color: #ffffff;
-          background-color: #26A65B;
+          color: #a7c080;
       }
 
       #battery.warning:not(.charging) {
-          background-color: #ffbe61;
-          color: black;
+          background: rgba(219, 170, 105, 0.3);
+          color: #dbaa69;
       }
 
       #battery.critical:not(.charging) {
-          background-color: #f53c3c;
-          color: #ffffff;
+          background: rgba(230, 126, 128, 0.3);
+          color: #e67e80;
           animation-name: blink;
           animation-duration: 0.5s;
           animation-timing-function: linear;
@@ -365,19 +593,25 @@
           animation-direction: alternate;
       }
 
+      /* Tray */
       #tray {
-          padding-left: 16px;
-          padding-right: 16px;
-          border-radius: 10px;
-          transition: none;
-          color: #ffffff;
-          background: #383c4a;
+          margin: 4px 8px 4px 2px;
+          padding: 0 10px;
+      }
+
+      #tray > .passive {
+          -gtk-icon-effect: dim;
+      }
+
+      #tray > .needs-attention {
+          -gtk-icon-effect: highlight;
+          background: rgba(230, 126, 128, 0.3);
       }
 
       @keyframes blink {
           to {
-              background-color: #ffffff;
-              color: #000000;
+              background: rgba(230, 126, 128, 0.5);
+              color: #e67e80;
           }
       }
     '';

@@ -1,7 +1,7 @@
 #!/bin/bash
 # /* ---- 💫 https://github.com/JaKooLit 💫 ---- */  ##
 
-# For Hyprlock
+# For Noctalia
 
-pidof hyprlock || hyprlock -q 
+noctalia msg session lock
 

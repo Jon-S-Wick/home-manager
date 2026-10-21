@@ -15,7 +15,7 @@
     enableZshIntegration = true;
     installVimSyntax = true;
     settings = {
-      theme = "Gruvbox Dark";
+      # theme = "Gruvbox Dark";
       keybind = [
         "ctrl+enter=ignore"
 

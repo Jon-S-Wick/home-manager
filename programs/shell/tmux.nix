@@ -59,5 +59,8 @@ in
       # tmuxPlugins.tokyo-night-tmux
     ];
   };
-  home.packages = [ Config ];
+  home.packages = [
+    Config
+    pkgs.gitmux
+  ];
 }

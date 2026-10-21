@@ -20,20 +20,28 @@
 
   programs.zsh = {
 
-    initContent = lib.mkBefore ''
-               setopt EXTENDED_HISTORY;
-      export MAMBA_EXE='/nix/store/mw141k4ssdzcpkzxrfl6889arh7jmrva-micromamba-1.5.8/bin/micromamba';
-      export MAMBA_ROOT_PREFIX='/home/jonwick/.local/share/micromamba';
-      __mamba_setup="$("$MAMBA_EXE" shell hook --shell zsh --root-prefix "$MAMBA_ROOT_PREFIX" 2> /dev/null)"
-      if [ $? -eq 0 ]; then
-          eval "$__mamba_setup"
-      else
-          alias micromamba="$MAMBA_EXE"  # Fallback on help from mamba activate
-      fi
-      unset __mamba_setup
-      # <<< mamba initialize <<<
+    initContent = lib.mkMerge [
+      (lib.mkBefore ''
+                 setopt EXTENDED_HISTORY;
+        export MAMBA_EXE='/nix/store/mw141k4ssdzcpkzxrfl6889arh7jmrva-micromamba-1.5.8/bin/micromamba';
+        export MAMBA_ROOT_PREFIX='/home/jonwick/.local/share/micromamba';
+        __mamba_setup="$("$MAMBA_EXE" shell hook --shell zsh --root-prefix "$MAMBA_ROOT_PREFIX" 2> /dev/null)"
+        if [ $? -eq 0 ]; then
+            eval "$__mamba_setup"
+        else
+            alias micromamba="$MAMBA_EXE"  # Fallback on help from mamba activate
+        fi
+        unset __mamba_setup
+        # <<< mamba initialize <<<
 
-    '';
+      '')
+      (lib.mkAfter ''
+        if (( $+widgets[history-substring-search-up] )); then
+          bindkey $'\eOA' history-substring-search-up
+          bindkey $'\eOB' history-substring-search-down
+        fi
+      '')
+    ];
 
     enable = true;
 
@@ -73,9 +81,9 @@
     };
 
     profileExtra = lib.optionalString (config.home.sessionPath != [ ]) ''
-            export PATH="$PATH''${PATH:+:}${lib.concatStringsSep ":" config.home.sessionPath}"
-      bindkey "^[[1;5C" forward-word
-      bindkey "^[[1;5D" backward-word
+                        export PATH="$PATH''${PATH:+:}${lib.concatStringsSep ":" config.home.sessionPath}"
+                  bindkey "^[[1;5C" forward-word
+                  bindkey "^[[1;5D" backward-word
     '';
 
     shellAliases = {
@@ -84,7 +92,6 @@
       clipLast = ''wl-copy "!!" '';
       clip = "wl-copy";
       sd = "cd ~ && cd $(find * -type d | fzf)";
-      nvim = "/home/jonwick/.config/nixvim/result/bin/nvim";
       vim = "nvim";
       vi = "nvim";
       v = "nvim .";
@@ -100,6 +107,7 @@
       bwl = "rbw list";
       bws = "rbw list | fzf --preview 'rbw get {}'";
       bwe = "RBW_EDITOR=nvim rbw edit $(rbw list | fzf)";
+      #Shortcuts
       e = "exit";
       cd = "z";
       b = "cd -";
@@ -133,6 +141,7 @@
 
       gaa = "git add .";
       gcm = "git commit -m";
+      hms = "find ~ -name '*.hm-backup' -delete 2>/dev/null; home-manager switch --flake ~/.config/home-manager";
     };
   };
 

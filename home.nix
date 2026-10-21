@@ -20,7 +20,7 @@
     # ./programs/dunst/default.nix
     # ./programs/wofi/cider.nix
     # ./programs/waybar/default.nix
-    ./scripts/default.nix
+    # ./programs/quickshell/default.nix
     ./programs/clipman.nix
 
     ./programs/spicetify.nix
@@ -32,8 +32,6 @@
   # manage.
 
   home.pointerCursor.enable = true;
-  stylix.targets.mako.enable = false;
-  # stylix.targets.sddm.enable = true;
 
   home.username = "jonwick";
   home.homeDirectory = "/home/jonwick";
@@ -45,6 +43,14 @@
 
   ];
 
+  programs.noctalia = {
+    enable = true;
+    systemd.enable = true;
+
+    # Optional
+    # compositor = "niri";
+    # theme = "default";
+  };
   # services.xserver = {
   #     enable = true;
   #   };
@@ -85,13 +91,12 @@
     in
     [
       wrappedVivaldi
-      pkgs.mysql-workbench
-      pkgs.neovim
+      inputs.nixvim.packages.${pkgs.system}.nvim
       pkgs.waydroid
       pkgs.morewaita-icon-theme
 
       pkgs.nodejs
-      pkgs.ollama-cuda
+      pkgs.feishin
       pkgs.conda
       pkgs.mamba-cpp
       pkgs.uv
@@ -106,22 +111,24 @@
       pkgs.teams-for-linux
       pkgs.vscode
       pkgs.nerd-fonts.lilex
+      pkgs.nerd-fonts.open-dyslexic
       pkgs.nerd-fonts.hack
       pkgs.bitwarden-desktop
       pkgs.pinentry-all
       pkgs.bitwarden-cli
       pkgs.igv
-      pkgs.hyprpanel
+      # pkgs.hyprpanel
       pkgs.geary
       pkgs.iwgtk
       pkgs.samtools
-      pkgs.rstudio
       pkgs.zotero
       pkgs.obsidian
       # pkgs.zoom-us
       pkgs.racket
       # pkgs.imagej
       pkgs.fiji
+      # pkgs.hyprfm
+      pkgs.speedtest-cli
       pkgs.ghostty
       pkgs.adguardhome
       pkgs.vlc
@@ -129,11 +136,10 @@
       pkgs.rbw
       pkgs.pwvucontrol
       pkgs.jdt-language-server
+      pkgs.jupyter
       pkgs.opencode
       pkgs.fastfetch
-      pkgs.ghostty
       pkgs.lutris
-      # inputs.ghostty.packages.x86_64-linux.default
       pkgs.cliphist
       pkgs.swappy
       pkgs.slurp
@@ -144,11 +150,7 @@
 
       pkgs.wpsoffice-cn
 
-      pkgs.rPackages.rtracklayer
-      pkgs.rPackages.GenomicRanges
-      pkgs.rPackages.BiocGenerics
-      pkgs.rPackages.IRanges
-      # pkgs.R
+      pkgs.R
       # pkgs.curl
       pkgs.pkg-config
       # pkgs.libxml2
@@ -157,7 +159,7 @@
       pkgs.xz
       pkgs.bzip2
       pkgs.openssl
-      # pkgs.matlab
+      pkgs.matlab
       # optional:
       # pkgs.gcc
       # pkgs.which
@@ -165,36 +167,17 @@
       pkgs.coreutils
       pkgs.pymol
       pkgs.discord
-      pkgs.python313Packages.matplotlib
-      pkgs.python313Packages.seaborn
       pkgs.lunar-client
 
       pkgs.bun
 
       inputs.winapps.packages.${pkgs.system}.winapps
       inputs.winapps.packages."${pkgs.system}".winapps-launcher # optional
+      inputs.psysonic.packages.${pkgs.system}.psysonic
 
-      # pkgs.IntaRNA
-      # pkgs.spotify
+      inputs.hyprfm.packages.${pkgs.system}.default
+      inputs.torlink.packages.${pkgs.system}.default
 
-      # pkgs.ghostty
-
-      # pkgs.cider-2
-      # pkgs.appimageTools
-      # pkgs.fetchurl
-      # pkgs.lib
-      # # It is sometimes useful to fine-tune packages, for example, by applying
-      # # overrides. You can do that directly here, just don't forget the
-      # # parentheses. Maybe you want to install Nerd Fonts with a limited number of
-      # # fonts?
-      # (pkgs.nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
-
-      # # You can also create simple shell scripts directly inside your
-      # # configuration. For example, this adds a command 'my-hello' to your
-      # # environment:
-      # (pkgs.writeShellScriptBin "my-hello" ''
-      #   echo "Hello, ${config.home.username}!"
-      # '')
     ];
 
   # xdg.autostart = {
@@ -276,8 +259,105 @@
   home.sessionVariables = {
     EDITOR = "nvim";
   };
+
+  xdg.mimeApps.enable = true;
   xdg.mimeApps.defaultApplications = {
-    "x-scheme-handler/zoommtg" = [ "zoom.desktop" ];
+    # Browser
+    "text/html" = "vivaldi-stable.desktop";
+    "x-scheme-handler/http" = "vivaldi-stable.desktop";
+    "x-scheme-handler/https" = "vivaldi-stable.desktop";
+    "x-scheme-handler/ftp" = "vivaldi-stable.desktop";
+    "x-scheme-handler/about" = "vivaldi-stable.desktop";
+    "x-scheme-handler/unknown" = "vivaldi-stable.desktop";
+    "x-scheme-handler/spotify" = "spotify.desktop";
+
+    # File manager and terminal
+    "inode/directory" = "io.github.soyeb_jim285.HyprFM.desktop";
+    "application/x-terminal-emulator" = "com.mitchellh.ghostty.desktop";
+
+    # Images
+    "image/jpeg" = "imv.desktop";
+    "image/png" = "imv.desktop";
+    "image/gif" = "imv.desktop";
+    "image/webp" = "imv.desktop";
+    "image/svg+xml" = "imv.desktop";
+    "image/avif" = "imv.desktop";
+    "image/bmp" = "imv.desktop";
+    "image/tiff" = "imv.desktop";
+    "image/*" = "imv.desktop";
+
+    # Video
+    "video/mp4" = "vlc.desktop";
+    "video/x-matroska" = "vlc.desktop";
+    "video/webm" = "vlc.desktop";
+    "video/ogg" = "vlc.desktop";
+    "video/quicktime" = "vlc.desktop";
+    "video/*" = "vlc.desktop";
+
+    # Audio (local playback; stream links stay with Spotify)
+    "audio/mpeg" = "vlc.desktop";
+    "audio/ogg" = "vlc.desktop";
+    "audio/flac" = "vlc.desktop";
+    "audio/wav" = "vlc.desktop";
+    "audio/x-m4a" = "vlc.desktop";
+    "audio/mp4" = "vlc.desktop";
+    "audio/*" = "vlc.desktop";
+
+    # Documents
+    "application/pdf" = "zotero.desktop";
+    "text/plain" = "nvim.desktop";
+    "text/csv" = [
+      "onlyoffice-desktopeditors.desktop"
+      "calc.desktop"
+    ];
+    "text/markdown" = "obsidian.desktop";
+
+    # Office: OnlyOffice primary, LibreOffice as fallback
+    "application/msword" = [
+      "onlyoffice-desktopeditors.desktop"
+      "writer.desktop"
+    ];
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document" = [
+      "onlyoffice-desktopeditors.desktop"
+      "writer.desktop"
+    ];
+    "application/vnd.ms-excel" = [
+      "onlyoffice-desktopeditors.desktop"
+      "calc.desktop"
+    ];
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" = [
+      "onlyoffice-desktopeditors.desktop"
+      "calc.desktop"
+    ];
+    "application/vnd.ms-powerpoint" = [
+      "onlyoffice-desktopeditors.desktop"
+      "impress.desktop"
+    ];
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation" = [
+      "onlyoffice-desktopeditors.desktop"
+      "impress.desktop"
+    ];
+    "application/vnd.oasis.opendocument.text" = [
+      "onlyoffice-desktopeditors.desktop"
+      "writer.desktop"
+    ];
+    "application/vnd.oasis.opendocument.spreadsheet" = [
+      "onlyoffice-desktopeditors.desktop"
+      "calc.desktop"
+    ];
+    "application/vnd.oasis.opendocument.presentation" = [
+      "onlyoffice-desktopeditors.desktop"
+      "impress.desktop"
+    ];
+
+    # Mail and conferencing
+    "x-scheme-handler/mailto" = "org.gnome.Geary.desktop";
+    "x-scheme-handler/zoommtg" = "zoom.desktop";
+    "x-scheme-handler/msteams" = "teams-for-linux.desktop";
+
+    # App-specific schemes
+    "x-scheme-handler/obsidian" = "obsidian.desktop";
+    "x-scheme-handler/bitwarden" = "bitwarden.desktop";
   };
 
   # Rename and tidy audio sinks via WirePlumber rules.
