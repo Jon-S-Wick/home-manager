@@ -1,11 +1,11 @@
 {
   inputs,
   pkgs,
+  lib,
   ...
 }:
 
 {
-
   imports = [
     ./theming.nix
     # ./settings.nix
@@ -21,7 +21,7 @@
     # ./programs/wofi/cider.nix
     # ./programs/waybar/default.nix
     # ./programs/quickshell/default.nix
-    ./programs/clipman.nix
+    # ./programs/clipman.nix
 
     ./programs/spicetify.nix
     # inputs.spicetify-nix.homeManagerModules.default
@@ -40,12 +40,16 @@
   nixpkgs.config.permittedInsecurePackages = [
     "openclaw-2026.6.5"
     "electron-39.8.10"
+    "firefox-esr-140-bin-unwrapped-140.17.0esr"
 
   ];
 
   programs.noctalia = {
     enable = true;
     systemd.enable = true;
+
+    # Keep noctalia's own build (5.2.1) instead of nixpkgs' (5.2.0).
+    package = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default;
 
     # Optional
     # compositor = "niri";
@@ -62,7 +66,7 @@
   # You should not change this value, even if you update Home Manager. If you do
   # want to update the value, then make sure to first check the Home Manager
   # release notes.
-  home.stateVersion = "24.05"; # Please read the comment before changing.
+  home.stateVersion = "26.05"; # Please read the comment before changing.
   gtk.iconTheme.name = "MoreWaita";
   # gtk.gtk4.theme.package = pkgs.orchis-theme.override { tweaks = [ "black" ]; };
   # gtk.gtk4.theme.name = "Orchis-black";
@@ -90,94 +94,152 @@
       };
     in
     [
-      wrappedVivaldi
-      inputs.nixvim.packages.${pkgs.system}.nvim
-      pkgs.waydroid
-      pkgs.morewaita-icon-theme
-
-      pkgs.nodejs
-      pkgs.feishin
-      pkgs.conda
-      pkgs.mamba-cpp
-      pkgs.uv
-      # pkgs.openclaw
-      pkgs.onlyoffice-desktopeditors
-      pkgs.wpsoffice-cn
-      pkgs.wrangler
-      pkgs.libreoffice
-      pkgs.proton-vpn
-      wrappedBrave
-      pkgs.via
-      pkgs.teams-for-linux
-      pkgs.vscode
-      pkgs.nerd-fonts.lilex
-      pkgs.nerd-fonts.open-dyslexic
-      pkgs.nerd-fonts.hack
-      pkgs.bitwarden-desktop
-      pkgs.pinentry-all
-      pkgs.bitwarden-cli
-      pkgs.igv
-      # pkgs.hyprpanel
-      pkgs.geary
-      pkgs.iwgtk
-      pkgs.samtools
-      pkgs.zotero
-      pkgs.obsidian
-      # pkgs.zoom-us
-      pkgs.racket
-      # pkgs.imagej
-      pkgs.fiji
-      # pkgs.hyprfm
-      pkgs.speedtest-cli
-      pkgs.ghostty
-      pkgs.adguardhome
-      pkgs.vlc
-      pkgs.bitwarden-menu
-      pkgs.rbw
-      pkgs.pwvucontrol
-      pkgs.jdt-language-server
-      pkgs.jupyter
-      pkgs.opencode
-      pkgs.fastfetch
-      pkgs.lutris
-      pkgs.cliphist
-      pkgs.swappy
-      pkgs.slurp
-      pkgs.grimblast
-      pkgs.spicetify-cli
-      pkgs.texliveFull
-      pkgs.texlivePackages.platex-tools
-
-      pkgs.wpsoffice-cn
-
-      pkgs.R
-      # pkgs.curl
+      # System & Core Utilities
+      pkgs.coreutils
       pkgs.pkg-config
-      # pkgs.libxml2
       pkgs.libiconv
       pkgs.zlib
       pkgs.xz
       pkgs.bzip2
-      pkgs.openssl
-      pkgs.matlab
-      # optional:
-      # pkgs.gcc
-      # pkgs.which
+      pkgs.qt6.qtwebengine
+      pkgs.qt6.qtwayland
+      pkgs.libdrm
+      pkgs.mesa
+      # pkgs.nss
+      pkgs.glib
+      # Fonts
+      pkgs.nerd-fonts.lilex
+      pkgs.nerd-fonts.open-dyslexic
+      pkgs.nerd-fonts.hack
+      pkgs.morewaita-icon-theme
 
-      pkgs.coreutils
-      pkgs.pymol
+      # Terminal & Shell
+      pkgs.ghostty
+      pkgs.bun
+      pkgs.nodejs
+
+      # Development Tools
+      pkgs.vscode
+      pkgs.rstudio
+      pkgs.jdt-language-server
+      pkgs.jupyter
+      pkgs.opencode
+      pkgs.racket
+      pkgs.matlab
+      pkgs.wrangler
+      inputs.nixvim.packages.${pkgs.system}.nvim
+      inputs.psysonic.packages.${pkgs.system}.psysonic
+      inputs.hyprfm.packages.${pkgs.system}.default
+
+      # Version Control & CLI Tools
+      pkgs.fastfetch
+      pkgs.speedtest-cli
+      pkgs.uv
+      pkgs.mamba-cpp
+      pkgs.conda
+
+      # Browsers
+      wrappedVivaldi
+      wrappedBrave
+
+      # Communication
+      pkgs.teams-for-linux
       pkgs.discord
+      pkgs.geary
+      pkgs.thunderbird
+      pkgs.kdePackages.kdeconnect-kde
+
+      # Android & Mobile
+      pkgs.localsend
+      pkgs.scrcpy
+      pkgs.android-tools
+
+      # Office & Productivity
+      pkgs.onlyoffice-desktopeditors
+      pkgs.libreoffice
+      pkgs.wpsoffice-cn
+      pkgs.zotero # 10.0.4 has build issues - temporarily disabled
+      # pkgs.zotero
+      pkgs.obsidian
+      pkgs.via
+      pkgs.feishin
+
+      # Media & Graphics
+      pkgs.vlc
+      pkgs.fiji
+      pkgs.pymol
+      pkgs.igv
+      pkgs.spicetify-cli
+      pkgs.lutris
       pkgs.lunar-client
 
-      pkgs.bun
+      # Security & Password Management
+      pkgs.bitwarden-desktop
+      pkgs.bitwarden-cli
+      pkgs.bitwarden-menu
+      pkgs.rbw
+      pkgs.pinentry-all
+      pkgs.proton-vpn
 
-      inputs.winapps.packages.${pkgs.system}.winapps
-      inputs.winapps.packages."${pkgs.system}".winapps-launcher # optional
-      inputs.psysonic.packages.${pkgs.system}.psysonic
+      pkgs.openconnect
+      pkgs.sqlite
 
-      inputs.hyprfm.packages.${pkgs.system}.default
-      inputs.torlink.packages.${pkgs.system}.default
+      # VPN helper (cookie based)
+      (pkgs.writeShellScriptBin "vpn-wwu" ''
+        #!/usr/bin/env bash
+        set -e
 
+        echo "[vpn-wwu] Opening WWU VPN portal in Vivaldi..."
+        ${pkgs.vivaldi}/bin/vivaldi "https://remotevpn.wwu.edu" >/dev/null 2>&1 &
+
+        echo "[vpn-wwu] Complete WWU SSO/MFA login in the browser."
+        echo "[vpn-wwu] After the login finishes and you're redirected, press Enter here."
+        read -r
+
+        COOKIE_DB="$HOME/.config/vivaldi/Default/Network/Cookies"
+        if [ ! -f "$COOKIE_DB" ]; then
+          COOKIE_DB="$HOME/.config/vivaldi/Default/Cookies"
+        fi
+
+        COOKIE=""
+
+        if [ -f "$COOKIE_DB" ]; then
+          COOKIE=$(${pkgs.sqlite}/bin/sqlite3 "file:$COOKIE_DB?mode=ro" \
+            "SELECT value FROM cookies WHERE host_key LIKE '%remotevpn.wwu.edu%' AND name='acSamlv2Token' ORDER BY creation_utc DESC LIMIT 1;" 2>/dev/null || true)
+        fi
+
+        if [ -z "$COOKIE" ]; then
+          echo "[vpn-wwu] Could not auto-extract acSamlv2Token from Vivaldi."
+          echo "[vpn-wwu] Manually grab it: F12 -> Application -> Cookies -> https://remotevpn.wwu.edu -> acSamlv2Token"
+          read -rp "[vpn-wwu] Paste acSamlv2Token: " COOKIE
+        else
+          echo "[vpn-wwu] Auto-extracted acSamlv2Token from Vivaldi cookies."
+        fi
+
+        echo "[vpn-wwu] Connecting with openconnect..."
+        exec ${pkgs.openconnect}/bin/openconnect --protocol=anyconnect --authgroup=MFA-Split-Tunnel2 --cookie="acSamlv2Token=$COOKIE" remotevpn.wwu.edu
+      '')
+
+      # Wayland & Desktop
+      pkgs.waydroid
+      pkgs.adguardhome
+      pkgs.iwgtk
+
+      # Screenshot & Clipboard
+      pkgs.cliphist
+      pkgs.swappy
+      pkgs.slurp
+      pkgs.grimblast
+
+      # Document Processing
+      pkgs.texliveFull
+      pkgs.texlivePackages.platex-tools
+
+      # Bioinformatics
+      pkgs.samtools
+
+      # Other
+      pkgs.pwvucontrol
     ];
 
   # xdg.autostart = {
@@ -217,27 +279,31 @@
     exec = "${pkgs.thunderbird}/bin/thunderbird";
     terminal = false;
   };
+  xdg.desktopEntries.kdeconnect = {
+    name = "KDE Connect";
+    exec = "${pkgs.kdePackages.kdeconnect-kde}/bin/kdeconnect-indicator";
+    terminal = false;
+  };
+  xdg.desktopEntries.igv = {
+    name = "IGV";
+    genericName = "Integrative Genomics Viewer";
+    comment = "Interactive genome browser";
+    exec = "${pkgs.igv}/bin/igv";
+    icon = "applications-science";
+    terminal = false;
+    categories = [
+      "Science"
+      "Biology"
+      "Java"
+    ];
+    settings.Keywords = "IGV;genome;browser;bioinformatics;";
+  };
   xdg.autostart.enable = true;
-  # programs.neovim = {
-  #   enable = true;
-  #   extraPackages = with pkgs; [
-  #     vimPlugins.mini-base16
-  #     # Formatters
-  #     gofumpt
-  #     goimports-reviser
-  #     golines
-  #
-  #     # LSP
-  #     gopls
-  #     jdt-language-server
-  #     pyright
-  #
-  #     # Tools
-  #     go
-  #     gcc
-  #   ];
-  # };
-
+  xdg.autostart.entries = [
+    "${pkgs.thunderbird}/share/applications/thunderbird.desktop"
+    "${pkgs.kdePackages.kdeconnect-kde}/share/applications/org.kde.kdeconnect.daemon.desktop"
+    "${pkgs.kdePackages.kdeconnect-kde}/share/applications/org.kde.kdeconnect.nonplasma.desktop"
+  ];
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
   # Home Manager can also manage your environment variables through
@@ -258,6 +324,7 @@
   #
   home.sessionVariables = {
     EDITOR = "nvim";
+
   };
 
   xdg.mimeApps.enable = true;

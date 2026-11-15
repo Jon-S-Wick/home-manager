@@ -14,7 +14,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     hyprfm.url = "github:soyeb-jim285/hyprfm";
-    torlink.url = "github:baairon/torlink";
+    # torlink.url = "github:baairon/torlink";
     psysonic.url = "github:Psysonic/psysonic";
 
     home-manager.url = "github:nix-community/home-manager";
@@ -34,10 +34,6 @@
       # compatibility.
       inputs.nixpkgs.follows = "nixpkgs";
       url = "gitlab:doronbehar/nix-matlab";
-    };
-    winapps = {
-      url = "github:winapps-org/winapps";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     # hyprdynamicmonitors.url = "github:fiffeek/hyprdynamicmonitors";
@@ -64,6 +60,7 @@
       spicetify-nix,
       home-manager,
       nix-matlab,
+      # nixpkgs-rstudio,
       ...
     }@inputs:
     let
@@ -71,7 +68,9 @@
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
-        overlays = [ nix-matlab.overlay ];
+        overlays = [
+          nix-matlab.overlay
+        ];
       };
 
     in
@@ -84,11 +83,12 @@
             _module.args = { inherit inputs; };
             inherit inputs;
           }
-          inputs.noctalia.homeModules.default
+          # home-manager >= a439f71 ships programs.noctalia itself, so
+          # inputs.noctalia.homeModules.default must not be imported here.
           inputs.stylix.homeModules.stylix
           inputs.spicetify-nix.homeManagerModules.default
           inputs.hyprfm.${pkgs.system}.default
-          inputs.torlink.${pkgs.system}.default
+          # inputs.torlink.${pkgs.system}.default
           inputs.nixvim.packages.${pkgs.system}.nvim
 
           inputs.psysonic.packages.${pkgs.system}.psysonic
@@ -113,7 +113,6 @@
           inputs.stylix.homeModules.stylix
           inputs.spicetify-nix.homeManagerModules.default
           # inputs.hyprdynamicmonitors.homeManagerModules.default
-          inputs.noctalia.homeModules.default
         ];
 
         # Optionally use extraSpecialArgs
